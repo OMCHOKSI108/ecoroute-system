@@ -1,0 +1,41 @@
+# Environment
+.env
+.env.*
+!.env.example
+!backend/.env.example
+
+# Dependencies
+node_modules/
+backend/node_modules/
+frontend/
+frontend
+
+
+# Build output
+dist/
+backend/dist/
+build/
+backend/build/
+
+# Logs
+*.log
+logs/
+
+# Local prompt/scratch exports
+docs/pasted-text.txt
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test coverage
+coverage/
+backend/coverage/
+.nyc_output/
+
+# TypeScript cache
+*.tsbuildinfo

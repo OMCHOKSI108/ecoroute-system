@@ -1,0 +1,1250 @@
+{
+	"id": "8183a152-1894-47f9-9d21-ca3c3500bde5",
+	"name": "EcoRoute Engine API",
+	"timestamp": "2026-06-11T12:30:29.487Z",
+	"collection_id": "50428643-884720ba-a9cc-45d5-a91b-5ea172d82a20",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 62,
+	"delay": 0,
+	"persist": false,
+	"status": "finished",
+	"startedAt": "2026-06-11T12:30:28.243Z",
+	"totalFail": 1,
+	"results": [
+		{
+			"id": "93cdc3ac-e6f2-4a4a-9967-26aa624a0cf2",
+			"name": "Root API Index",
+			"url": "http://localhost:3000/",
+			"time": 7,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Root index returns 200": true,
+				"Response identifies EcoRoute Engine": true
+			},
+			"testPassFailCounts": {
+				"Root index returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response identifies EcoRoute Engine": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Root index returns 200": true,
+					"Response identifies EcoRoute Engine": true
+				}
+			]
+		},
+		{
+			"id": "aecf28b7-efc9-4edd-b088-ae385ad13746",
+			"name": "API v1 Index",
+			"url": "http://localhost:3000/api/v1",
+			"time": 2,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"API index returns 200": true
+			},
+			"testPassFailCounts": {
+				"API index returns 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				2
+			],
+			"allTests": [
+				{
+					"API index returns 200": true
+				}
+			]
+		},
+		{
+			"id": "ae9dab8d-ea16-486e-aac3-f80b66b61b92",
+			"name": "Health Check",
+			"url": "http://localhost:3000/api/v1/health",
+			"time": 17,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Health endpoint returns 200": true,
+				"Health response contains checks": true
+			},
+			"testPassFailCounts": {
+				"Health endpoint returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Health response contains checks": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				17
+			],
+			"allTests": [
+				{
+					"Health endpoint returns 200": true,
+					"Health response contains checks": true
+				}
+			]
+		},
+		{
+			"id": "fa61f8bb-3be9-48bd-a13a-da7b8c66aeec",
+			"name": "Swagger UI",
+			"url": "http://localhost:3000/api/v1/docs",
+			"time": 7,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Swagger UI returns success or redirect": true
+			},
+			"testPassFailCounts": {
+				"Swagger UI returns success or redirect": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Swagger UI returns success or redirect": true
+				}
+			]
+		},
+		{
+			"id": "e077a712-7b21-497c-98e3-9201dc268fbe",
+			"name": "Register Organization and Admin",
+			"url": "http://localhost:3000/api/v1/auth/register",
+			"time": 248,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Registration returns 201": true,
+				"Tokens captured": true
+			},
+			"testPassFailCounts": {
+				"Registration returns 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Tokens captured": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				248
+			],
+			"allTests": [
+				{
+					"Registration returns 201": true,
+					"Tokens captured": true
+				}
+			]
+		},
+		{
+			"id": "8c2d670a-19ba-4185-9cee-0c0c45af8e5d",
+			"name": "Login Admin",
+			"url": "http://localhost:3000/api/v1/auth/login",
+			"time": 230,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Login returns 200": true,
+				"Login token captured": true
+			},
+			"testPassFailCounts": {
+				"Login returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Login token captured": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				230
+			],
+			"allTests": [
+				{
+					"Login returns 200": true,
+					"Login token captured": true
+				}
+			]
+		},
+		{
+			"id": "0eb5832c-3b06-44a6-9557-52fbea08a8ac",
+			"name": "Refresh Tokens",
+			"url": "http://localhost:3000/api/v1/auth/refresh",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Refresh returns 200": true
+			},
+			"testPassFailCounts": {
+				"Refresh returns 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Refresh returns 200": true
+				}
+			]
+		},
+		{
+			"id": "34d063f1-db0d-49f2-b360-b00e10028e6e",
+			"name": "Create Business",
+			"url": "http://localhost:3000/api/v1/businesses",
+			"time": 19,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Create business returns 201": true,
+				"Business ID captured": true
+			},
+			"testPassFailCounts": {
+				"Create business returns 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Business ID captured": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				19
+			],
+			"allTests": [
+				{
+					"Create business returns 201": true,
+					"Business ID captured": true
+				}
+			]
+		},
+		{
+			"id": "90c92f2b-c492-40fb-b9a3-1f654016e297",
+			"name": "List Businesses",
+			"url": "http://localhost:3000/api/v1/businesses?page=1&limit=20&isActive=true",
+			"time": 11,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"List businesses returns 200": true,
+				"Paginated business response": true
+			},
+			"testPassFailCounts": {
+				"List businesses returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Paginated business response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				11
+			],
+			"allTests": [
+				{
+					"List businesses returns 200": true,
+					"Paginated business response": true
+				}
+			]
+		},
+		{
+			"id": "56b363b0-5210-4fa9-a254-d541fe595429",
+			"name": "Get Business By ID",
+			"url": "http://localhost:3000/api/v1/businesses/7f198ce1-d88e-4dce-b562-8ddf11de7586",
+			"time": 5,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get business returns 200": true,
+				"Returned business matches captured ID": true
+			},
+			"testPassFailCounts": {
+				"Get business returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Returned business matches captured ID": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Get business returns 200": true,
+					"Returned business matches captured ID": true
+				}
+			]
+		},
+		{
+			"id": "e5e35ec1-b7a9-48da-882e-4f9866e2b510",
+			"name": "Create Vehicle",
+			"url": "http://localhost:3000/api/v1/vehicles",
+			"time": 6,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Create vehicle returns 201": true,
+				"Vehicle ID captured": true
+			},
+			"testPassFailCounts": {
+				"Create vehicle returns 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Vehicle ID captured": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"Create vehicle returns 201": true,
+					"Vehicle ID captured": true
+				}
+			]
+		},
+		{
+			"id": "02642f26-2d2e-4535-aec4-41783f6fefbb",
+			"name": "List Vehicles",
+			"url": "http://localhost:3000/api/v1/vehicles?page=1&limit=20&status=available",
+			"time": 3,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"List vehicles returns 200": true,
+				"Paginated vehicle response": true
+			},
+			"testPassFailCounts": {
+				"List vehicles returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Paginated vehicle response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				3
+			],
+			"allTests": [
+				{
+					"List vehicles returns 200": true,
+					"Paginated vehicle response": true
+				}
+			]
+		},
+		{
+			"id": "ac5ff8d9-c6a1-4d1a-9f14-270fd64ac664",
+			"name": "Get Vehicle By ID",
+			"url": "http://localhost:3000/api/v1/vehicles/fd289973-0cf5-4ce0-ba4e-02a3f9ce4489",
+			"time": 3,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get vehicle returns 200": true,
+				"Returned vehicle matches captured ID": true
+			},
+			"testPassFailCounts": {
+				"Get vehicle returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Returned vehicle matches captured ID": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				3
+			],
+			"allTests": [
+				{
+					"Get vehicle returns 200": true,
+					"Returned vehicle matches captured ID": true
+				}
+			]
+		},
+		{
+			"id": "2c5cc825-eb5e-45bc-888c-c6458bbca440",
+			"name": "Assign Driver Null",
+			"url": "http://localhost:3000/api/v1/vehicles/fd289973-0cf5-4ce0-ba4e-02a3f9ce4489/driver",
+			"time": 6,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Assign driver null returns 200": true
+			},
+			"testPassFailCounts": {
+				"Assign driver null returns 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"Assign driver null returns 200": true
+				}
+			]
+		},
+		{
+			"id": "c82bbf94-f992-4a73-8e55-6fc36737df98",
+			"name": "Create Pickup For Dispatch",
+			"url": "http://localhost:3000/api/v1/pickups",
+			"time": 7,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Create dispatch pickup returns 201": true,
+				"Pickup ID captured": true
+			},
+			"testPassFailCounts": {
+				"Create dispatch pickup returns 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Pickup ID captured": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Create dispatch pickup returns 201": true,
+					"Pickup ID captured": true
+				}
+			]
+		},
+		{
+			"id": "74c8ae45-7b05-469b-9dd7-5d28b99fc741",
+			"name": "Create Pickup For Cancellation",
+			"url": "http://localhost:3000/api/v1/pickups",
+			"time": 6,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Create cancellation pickup returns 201": true,
+				"Cancel pickup ID captured": true
+			},
+			"testPassFailCounts": {
+				"Create cancellation pickup returns 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Cancel pickup ID captured": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"Create cancellation pickup returns 201": true,
+					"Cancel pickup ID captured": true
+				}
+			]
+		},
+		{
+			"id": "c40414ab-86fa-4e88-adbd-28b28790bd13",
+			"name": "List Pickups",
+			"url": "http://localhost:3000/api/v1/pickups?page=1&limit=20&status=pending",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"List pickups returns 200": true,
+				"Paginated pickup response": true
+			},
+			"testPassFailCounts": {
+				"List pickups returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Paginated pickup response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"List pickups returns 200": true,
+					"Paginated pickup response": true
+				}
+			]
+		},
+		{
+			"id": "9d965f6d-7559-4400-ba0a-0eb6d1d7b568",
+			"name": "Get Nearby Pickups",
+			"url": "http://localhost:3000/api/v1/pickups/nearby?lat=22.5996&lng=72.8205&radiusMeters=5000",
+			"time": 11,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Nearby pickups returns 200": true,
+				"Nearby response is array": true
+			},
+			"testPassFailCounts": {
+				"Nearby pickups returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Nearby response is array": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				11
+			],
+			"allTests": [
+				{
+					"Nearby pickups returns 200": true,
+					"Nearby response is array": true
+				}
+			]
+		},
+		{
+			"id": "683d33ce-848e-4366-9ee1-1fba890f8f76",
+			"name": "Get My Pickups - Driver Endpoint RBAC Check",
+			"url": "http://localhost:3000/api/v1/pickups/my",
+			"time": 2,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {
+				"Admin token is forbidden from driver-only endpoint": true,
+				"Error code is FORBIDDEN": true
+			},
+			"testPassFailCounts": {
+				"Admin token is forbidden from driver-only endpoint": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Error code is FORBIDDEN": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				2
+			],
+			"allTests": [
+				{
+					"Admin token is forbidden from driver-only endpoint": true,
+					"Error code is FORBIDDEN": true
+				}
+			]
+		},
+		{
+			"id": "6cff7b69-cf83-42d8-853e-dd75fdeeba41",
+			"name": "Get Pickup By ID",
+			"url": "http://localhost:3000/api/v1/pickups/14c35c88-d913-4c4b-ba29-ebfebcd92098",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get pickup returns 200": true,
+				"Returned pickup matches captured ID": true
+			},
+			"testPassFailCounts": {
+				"Get pickup returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Returned pickup matches captured ID": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Get pickup returns 200": true,
+					"Returned pickup matches captured ID": true
+				}
+			]
+		},
+		{
+			"id": "80d3ca03-80ff-4888-a08b-60b7ab2edec5",
+			"name": "Cancel Pending Pickup",
+			"url": "http://localhost:3000/api/v1/pickups/9df68cd8-8915-4c92-b93f-ce303b92cfd1/status",
+			"time": 7,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Cancel pickup returns 200": true,
+				"Pickup is cancelled": true
+			},
+			"testPassFailCounts": {
+				"Cancel pickup returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Pickup is cancelled": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Cancel pickup returns 200": true,
+					"Pickup is cancelled": true
+				}
+			]
+		},
+		{
+			"id": "0343a310-5baa-42f6-9f28-c43b8629b9af",
+			"name": "Assign Dispatch",
+			"url": "http://localhost:3000/api/v1/dispatch/assign",
+			"time": 7,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Dispatch assignment returns 200": true,
+				"Vehicle is dispatched and pickup is assigned": true
+			},
+			"testPassFailCounts": {
+				"Dispatch assignment returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Vehicle is dispatched and pickup is assigned": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Dispatch assignment returns 200": true,
+					"Vehicle is dispatched and pickup is assigned": true
+				}
+			]
+		},
+		{
+			"id": "36582323-6b12-497e-9f3b-ba6f30998ccc",
+			"name": "Generate Route",
+			"url": "http://localhost:3000/api/v1/routes/generate",
+			"time": 12,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Generate route returns 201": true,
+				"Route ID captured": true
+			},
+			"testPassFailCounts": {
+				"Generate route returns 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Route ID captured": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				12
+			],
+			"allTests": [
+				{
+					"Generate route returns 201": true,
+					"Route ID captured": true
+				}
+			]
+		},
+		{
+			"id": "3dcd6ea3-a960-421c-8c2b-329beb027d1e",
+			"name": "List Routes",
+			"url": "http://localhost:3000/api/v1/routes?page=1&limit=20&status=active",
+			"time": 3,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"List routes returns 200": true,
+				"Paginated route response": true
+			},
+			"testPassFailCounts": {
+				"List routes returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Paginated route response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				3
+			],
+			"allTests": [
+				{
+					"List routes returns 200": true,
+					"Paginated route response": true
+				}
+			]
+		},
+		{
+			"id": "b9063a08-32d6-4feb-8ff1-37260249e5a4",
+			"name": "Get Route By ID",
+			"url": "http://localhost:3000/api/v1/routes/5fc4e9d3-655b-436e-9e1b-d85fc7b3a1dd",
+			"time": 2,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get route returns 200": true,
+				"Returned route matches captured ID": true
+			},
+			"testPassFailCounts": {
+				"Get route returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Returned route matches captured ID": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				2
+			],
+			"allTests": [
+				{
+					"Get route returns 200": true,
+					"Returned route matches captured ID": true
+				}
+			]
+		},
+		{
+			"id": "0462fed8-b72c-4334-90e2-0bb7532a22b6",
+			"name": "Complete Route",
+			"url": "http://localhost:3000/api/v1/routes/5fc4e9d3-655b-436e-9e1b-d85fc7b3a1dd/status",
+			"time": 7,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Complete route returns 200": true,
+				"Route is completed": true
+			},
+			"testPassFailCounts": {
+				"Complete route returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Route is completed": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Complete route returns 200": true,
+					"Route is completed": true
+				}
+			]
+		},
+		{
+			"id": "bb28969f-15de-4318-8c40-5a67aeb5007d",
+			"name": "Update Vehicle Status To Maintenance",
+			"url": "http://localhost:3000/api/v1/vehicles/fd289973-0cf5-4ce0-ba4e-02a3f9ce4489/status",
+			"time": 6,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Update vehicle status returns 200": true,
+				"Vehicle is in maintenance": true
+			},
+			"testPassFailCounts": {
+				"Update vehicle status returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Vehicle is in maintenance": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"Update vehicle status returns 200": true,
+					"Vehicle is in maintenance": true
+				}
+			]
+		},
+		{
+			"id": "a33af739-4ee2-44a6-9188-13d5358d7a6a",
+			"name": "Dashboard Summary",
+			"url": "http://localhost:3000/api/v1/dashboard/summary",
+			"time": 9,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Dashboard summary returns 200": true
+			},
+			"testPassFailCounts": {
+				"Dashboard summary returns 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Dashboard summary returns 200": true
+				}
+			]
+		},
+		{
+			"id": "410933eb-b533-46f5-b7d3-c59b6223fb3f",
+			"name": "Vehicle Workloads",
+			"url": "http://localhost:3000/api/v1/dashboard/vehicles",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Vehicle workloads returns 200": true,
+				"Vehicle workload response is array": true
+			},
+			"testPassFailCounts": {
+				"Vehicle workloads returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Vehicle workload response is array": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Vehicle workloads returns 200": true,
+					"Vehicle workload response is array": true
+				}
+			]
+		},
+		{
+			"id": "1d080776-1410-4af9-ba41-7134d167efe2",
+			"name": "Pickup Stats",
+			"url": "http://localhost:3000/api/v1/dashboard/pickups",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Pickup stats returns 200": true,
+				"Pickup stats response is array": false
+			},
+			"testPassFailCounts": {
+				"Pickup stats returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Pickup stats response is array": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Pickup stats returns 200": true,
+					"Pickup stats response is array": false
+				}
+			]
+		},
+		{
+			"id": "f8e36ac8-1507-4926-af48-cf0ba76a682d",
+			"name": "List Audit Logs",
+			"url": "http://localhost:3000/api/v1/audit-logs?page=1&limit=50",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Audit logs returns 200": true,
+				"Paginated audit response": true
+			},
+			"testPassFailCounts": {
+				"Audit logs returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Paginated audit response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Audit logs returns 200": true,
+					"Paginated audit response": true
+				}
+			]
+		},
+		{
+			"id": "fe323b2f-32bc-437f-8dac-52ab5a925ed2",
+			"name": "Missing Token Is Unauthorized",
+			"url": "http://localhost:3000/api/v1/businesses",
+			"time": 1,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Missing token returns 401": true,
+				"Error code is UNAUTHORIZED": true
+			},
+			"testPassFailCounts": {
+				"Missing token returns 401": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Error code is UNAUTHORIZED": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				1
+			],
+			"allTests": [
+				{
+					"Missing token returns 401": true,
+					"Error code is UNAUTHORIZED": true
+				}
+			]
+		},
+		{
+			"id": "c42f9cd6-9e2a-4071-913f-6f0f087f47be",
+			"name": "Invalid Business Payload",
+			"url": "http://localhost:3000/api/v1/businesses",
+			"time": 3,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Invalid business payload returns 400": true,
+				"Error code is BAD_REQUEST": true
+			},
+			"testPassFailCounts": {
+				"Invalid business payload returns 400": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Error code is BAD_REQUEST": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				3
+			],
+			"allTests": [
+				{
+					"Invalid business payload returns 400": true,
+					"Error code is BAD_REQUEST": true
+				}
+			]
+		},
+		{
+			"id": "86175bde-f6be-4f26-b804-a1a2d249825f",
+			"name": "Duplicate Dispatch Conflict",
+			"url": "http://localhost:3000/api/v1/dispatch/assign",
+			"time": 3,
+			"responseCode": {
+				"code": 409,
+				"name": "Conflict"
+			},
+			"tests": {
+				"Duplicate dispatch returns conflict or invalid state": true,
+				"Error code is CONFLICT": true
+			},
+			"testPassFailCounts": {
+				"Duplicate dispatch returns conflict or invalid state": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Error code is CONFLICT": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				3
+			],
+			"allTests": [
+				{
+					"Duplicate dispatch returns conflict or invalid state": true,
+					"Error code is CONFLICT": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 674,
+	"collection": {
+		"requests": [
+			{
+				"id": "93cdc3ac-e6f2-4a4a-9967-26aa624a0cf2",
+				"method": "GET"
+			},
+			{
+				"id": "aecf28b7-efc9-4edd-b088-ae385ad13746",
+				"method": "GET"
+			},
+			{
+				"id": "ae9dab8d-ea16-486e-aac3-f80b66b61b92",
+				"method": "GET"
+			},
+			{
+				"id": "fa61f8bb-3be9-48bd-a13a-da7b8c66aeec",
+				"method": "GET"
+			},
+			{
+				"id": "e077a712-7b21-497c-98e3-9201dc268fbe",
+				"method": "POST"
+			},
+			{
+				"id": "8c2d670a-19ba-4185-9cee-0c0c45af8e5d",
+				"method": "POST"
+			},
+			{
+				"id": "0eb5832c-3b06-44a6-9557-52fbea08a8ac",
+				"method": "POST"
+			},
+			{
+				"id": "34d063f1-db0d-49f2-b360-b00e10028e6e",
+				"method": "POST"
+			},
+			{
+				"id": "90c92f2b-c492-40fb-b9a3-1f654016e297",
+				"method": "GET"
+			},
+			{
+				"id": "56b363b0-5210-4fa9-a254-d541fe595429",
+				"method": "GET"
+			},
+			{
+				"id": "e5e35ec1-b7a9-48da-882e-4f9866e2b510",
+				"method": "POST"
+			},
+			{
+				"id": "02642f26-2d2e-4535-aec4-41783f6fefbb",
+				"method": "GET"
+			},
+			{
+				"id": "ac5ff8d9-c6a1-4d1a-9f14-270fd64ac664",
+				"method": "GET"
+			},
+			{
+				"id": "2c5cc825-eb5e-45bc-888c-c6458bbca440",
+				"method": "POST"
+			},
+			{
+				"id": "c82bbf94-f992-4a73-8e55-6fc36737df98",
+				"method": "POST"
+			},
+			{
+				"id": "74c8ae45-7b05-469b-9dd7-5d28b99fc741",
+				"method": "POST"
+			},
+			{
+				"id": "c40414ab-86fa-4e88-adbd-28b28790bd13",
+				"method": "GET"
+			},
+			{
+				"id": "9d965f6d-7559-4400-ba0a-0eb6d1d7b568",
+				"method": "GET"
+			},
+			{
+				"id": "683d33ce-848e-4366-9ee1-1fba890f8f76",
+				"method": "GET"
+			},
+			{
+				"id": "6cff7b69-cf83-42d8-853e-dd75fdeeba41",
+				"method": "GET"
+			},
+			{
+				"id": "80d3ca03-80ff-4888-a08b-60b7ab2edec5",
+				"method": "PATCH"
+			},
+			{
+				"id": "0343a310-5baa-42f6-9f28-c43b8629b9af",
+				"method": "POST"
+			},
+			{
+				"id": "36582323-6b12-497e-9f3b-ba6f30998ccc",
+				"method": "POST"
+			},
+			{
+				"id": "3dcd6ea3-a960-421c-8c2b-329beb027d1e",
+				"method": "GET"
+			},
+			{
+				"id": "b9063a08-32d6-4feb-8ff1-37260249e5a4",
+				"method": "GET"
+			},
+			{
+				"id": "0462fed8-b72c-4334-90e2-0bb7532a22b6",
+				"method": "PATCH"
+			},
+			{
+				"id": "bb28969f-15de-4318-8c40-5a67aeb5007d",
+				"method": "PATCH"
+			},
+			{
+				"id": "a33af739-4ee2-44a6-9188-13d5358d7a6a",
+				"method": "GET"
+			},
+			{
+				"id": "410933eb-b533-46f5-b7d3-c59b6223fb3f",
+				"method": "GET"
+			},
+			{
+				"id": "1d080776-1410-4af9-ba41-7134d167efe2",
+				"method": "GET"
+			},
+			{
+				"id": "f8e36ac8-1507-4926-af48-cf0ba76a682d",
+				"method": "GET"
+			},
+			{
+				"id": "fe323b2f-32bc-437f-8dac-52ab5a925ed2",
+				"method": "GET"
+			},
+			{
+				"id": "c42f9cd6-9e2a-4071-913f-6f0f087f47be",
+				"method": "POST"
+			},
+			{
+				"id": "86175bde-f6be-4f26-b804-a1a2d249825f",
+				"method": "POST"
+			}
+		]
+	}
+}

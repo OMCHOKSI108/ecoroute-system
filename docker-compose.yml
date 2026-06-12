@@ -1,0 +1,112 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: ecoroute_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ecoroute_db
+      POSTGRES_USER: ecoroute_user
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-change_me}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./backend/db/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecoroute_user -d ecoroute_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ecoroute_backend
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      APP_NAME: ${APP_NAME:-EcoRoute Engine}
+      API_PREFIX: ${API_PREFIX:-/api/v1}
+      DATABASE_URL: postgresql://ecoroute_user:${DATABASE_PASSWORD:-change_me}@db:5432/ecoroute_db
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ecoroute_db
+      DATABASE_USER: ecoroute_user
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-change_me}
+      JWT_SECRET: ${JWT_SECRET:-change_me_to_a_long_random_secret}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-15m}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change_me_to_another_long_random_secret}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-7d}
+      OSRM_BASE_URL: ${OSRM_BASE_URL:-http://osrm:5000}
+      OSRM_TIMEOUT_MS: ${OSRM_TIMEOUT_MS:-5000}
+      OFFLINE_MODE: ${OFFLINE_MODE:-false}
+      ENABLE_EXTERNAL_APIS: ${ENABLE_EXTERNAL_APIS:-false}
+      ENABLE_NOTIFICATIONS: ${ENABLE_NOTIFICATIONS:-false}
+      ENABLE_EMAIL: ${ENABLE_EMAIL:-false}
+      ENABLE_SMS: ${ENABLE_SMS:-false}
+      ENABLE_QUEUE: ${ENABLE_QUEUE:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      ENABLE_REQUEST_LOGGING: ${ENABLE_REQUEST_LOGGING:-true}
+      BCRYPT_SALT_ROUNDS: ${BCRYPT_SALT_ROUNDS:-10}
+      RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-60000}
+      RATE_LIMIT_MAX_REQUESTS: ${RATE_LIMIT_MAX_REQUESTS:-100}
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"require('http').get('http://localhost:3000/api/v1/health', r => process.exit(r.statusCode && r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))\""
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  # One-shot migration runner — use when re-applying migrations to an existing DB:
+  #   docker compose run --rm migrate
+  # Note: on first `docker compose up`, migrations also run automatically
+  # via the /docker-entrypoint-initdb.d mount on the db service.
+  migrate:
+    image: postgres:16-alpine
+    environment:
+      PGPASSWORD: ${DATABASE_PASSWORD:-change_me}
+    volumes:
+      - ./backend/db/migrations:/migrations
+    entrypoint: >
+      sh -c "
+        for f in /migrations/001_auth.sql /migrations/002_businesses.sql /migrations/003_vehicles.sql /migrations/004_pickup_requests.sql /migrations/005_routes.sql /migrations/006_audit_logs.sql; do
+          echo \"Applying $$f\";
+          psql -h db -U ecoroute_user -d ecoroute_db -f $$f;
+        done
+      "
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles:
+      - tools
+
+  # OSRM service — requires a pre-processed OSM map file.
+  # To use: download a .osm.pbf file, process it, then uncomment this service.
+  # osrm:
+  #   image: osrm/osrm-backend:v5.27.1
+  #   container_name: ecoroute_osrm
+  #   ports:
+  #     - "5000:5000"
+  #   volumes:
+  #     - ./osrm-data:/data
+  #   command: osrm-routed --algorithm mld /data/map.osrm
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
+  #     interval: 30s
+  #     timeout: 5s
+  #     retries: 3
+
+volumes:
+  db_data:
