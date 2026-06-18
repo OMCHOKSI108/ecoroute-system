@@ -1,8 +1,17 @@
 import { Pool, PoolClient, QueryResult, QueryResultRow } from 'pg';
 import { config } from './env';
 
+const sslConfig = config.nodeEnv === 'production'
+  ? { rejectUnauthorized: false }
+  : false;
+
 export const pool = new Pool({
-  connectionString: config.db.url,
+  host: config.db.host,
+  port: config.db.port,
+  database: config.db.name,
+  user: config.db.user,
+  password: config.db.password,
+  ssl: sslConfig,
   max: 10,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,
