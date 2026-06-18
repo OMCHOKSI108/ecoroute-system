@@ -28,12 +28,17 @@ function quoteIdentifier(value) {
 }
 
 function connectionConfig(databaseName) {
+  const url = process.env.DATABASE_URL || '';
+  const ssl = url.includes('sslmode=require') || url.includes('sslmode=verify-full')
+    ? { rejectUnauthorized: false }
+    : false;
   return {
     host: required('DATABASE_HOST'),
     port: Number(required('DATABASE_PORT')),
     user: required('DATABASE_USER'),
     password: required('DATABASE_PASSWORD'),
     database: databaseName,
+    ssl,
   };
 }
 
