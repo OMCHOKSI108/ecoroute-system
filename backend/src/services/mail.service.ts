@@ -1,7 +1,7 @@
 import {Resend} from 'resend';
 import {config} from '../config/env';
 
-const resend = new Resend(config.resendApiKey);
+const resend = config.resendApiKey ? new Resend(config.resendApiKey) : null;
 
 type SendMailInput = {
   to: string;

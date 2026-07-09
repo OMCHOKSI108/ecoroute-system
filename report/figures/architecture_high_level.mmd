@@ -1,0 +1,14 @@
+flowchart LR
+  Client[Client Applications
+Admin / Driver / Operations] --> API[Express API Layer
+Routes + Middleware]
+  API --> Security[Security Boundary
+JWT + RBAC + Zod]
+  Security --> Services[Domain Services
+Dispatch + Routing + Dashboard]
+  Services --> Repos[Repository Layer
+Parameterized SQL]
+  Repos --> DB[(PostgreSQL + PostGIS
+Spatial Indexes + Constraints)]
+  Services --> OSRM[OSRM Client
+Nearest + Matrix + Trip]

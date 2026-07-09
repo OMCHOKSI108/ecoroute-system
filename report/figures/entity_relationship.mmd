@@ -1,0 +1,11 @@
+erDiagram
+  ORGANIZATIONS ||--o{ USERS : owns
+  ORGANIZATIONS ||--o{ BUSINESSES : manages
+  ORGANIZATIONS ||--o{ VEHICLES : operates
+  BUSINESSES ||--o{ PICKUP_LOCATIONS : has
+  PICKUP_LOCATIONS ||--o{ PICKUP_REQUESTS : creates
+  VEHICLES ||--o{ PICKUP_REQUESTS : assigned_to
+  VEHICLES ||--o{ ROUTES : serves
+  ROUTES ||--o{ ROUTE_STOPS : contains
+  VEHICLES ||--o{ VEHICLE_LOCATIONS : reports
+  ORGANIZATIONS ||--o{ AUDIT_LOGS : records

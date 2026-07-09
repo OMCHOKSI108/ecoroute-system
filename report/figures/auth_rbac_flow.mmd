@@ -1,0 +1,7 @@
+flowchart TD
+  A[Login Request] --> B[Validate Credentials]
+  B --> C[Issue JWT Access and Refresh Tokens]
+  C --> D[Protected Request]
+  D --> E[Authenticate Middleware]
+  E --> F[Require Role Middleware]
+  F --> G[Controller Access]

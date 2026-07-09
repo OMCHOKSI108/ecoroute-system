@@ -1,0 +1,325 @@
+
+\documentclass[12pt,a4paper]{report}
+\usepackage[a4paper,left=1.25in,right=1in,top=1in,bottom=1in]{geometry}
+\usepackage{mathptmx}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{ragged2e}
+
+\graphicspath{{figures/}}
+\setstretch{1.5}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{12pt}
+\justifying
+\renewcommand{\contentsname}{TABLE OF CONTENTS}
+\renewcommand{\listfigurename}{LIST OF FIGURES}
+\renewcommand{\listtablename}{LIST OF TABLES}
+\renewcommand{\cftchapfont}{\normalfont}
+\renewcommand{\cftchappagefont}{\normalfont}
+\renewcommand{\cftdotsep}{1}
+\captionsetup{font=bf,labelfont=bf,justification=centering}
+\renewcommand{\thefigure}{\thechapter.\arabic{figure}}
+\renewcommand{\thetable}{\thechapter.\arabic{table}}
+\renewcommand{\figurename}{Fig.}
+\renewcommand{\cftfigpresnum}{Fig. }
+\setlength{\cftfignumwidth}{0.75in}
+\renewcommand{\cfttabpresnum}{Table }
+\setlength{\cfttabnumwidth}{0.9in}
+
+\titleformat{\chapter}
+  {\normalfont\bfseries\centering\fontsize{16}{19}\selectfont}
+  {CHAPTER \thechapter}{0.5em}{\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{0pt}{18pt}
+\titleformat{name=\chapter,numberless}
+  {\normalfont\bfseries\centering\fontsize{16}{19}\selectfont}
+  {}{0pt}{\MakeUppercase}
+\titleformat{\section}
+  {\normalfont\bfseries\fontsize{14}{17}\selectfont}
+  {\thesection}{3em}{\MakeUppercase}
+\titleformat{\subsection}
+  {\normalfont\bfseries\fontsize{12}{15}\selectfont}
+  {\thesubsection}{3em}{}
+
+\newcommand{\studentid}{[STUDENT ID]}
+\newcommand{\chapterheader}{CHAPTER HEADING}
+% Fancy header/footer is enabled after certificates.
+\fancyhf{}
+\fancyhead[L]{\fontsize{10}{12}\selectfont\studentid}
+\fancyhead[R]{\fontsize{10}{12}\selectfont\chapterheader}
+\fancyfoot[L]{\fontsize{10}{12}\selectfont DEPSTAR}
+\fancyfoot[C]{\fontsize{10}{12}\selectfont\thepage}
+\fancyfoot[R]{\fontsize{10}{12}\selectfont Department of Computer Engineering}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\newcommand{\frontchapter}[1]{\chapter*{#1}\addcontentsline{toc}{chapter}{#1}\markboth{#1}{#1}}
+
+\begin{document}
+\pagestyle{empty}
+\pagenumbering{gobble}
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{singlespace}
+\centering
+\vspace*{0.2in}
+{\bfseries\fontsize{16}{19}\selectfont A SUMMER INTERNSHIP REPORT\par}
+\vspace{0.14in}
+{\bfseries\fontsize{14}{17}\selectfont ON\par}
+\vspace{0.14in}
+{\bfseries\fontsize{16}{19}\selectfont [PROJECT TITLE]\par}
+\vspace{0.22in}
+Submitted in partial fulfilment of the requirements for the Summer Internship\par
+\vspace{0.16in}
+{\bfseries Bachelor of Technology\par}
+in\par
+{\bfseries Computer Engineering\par}
+\vspace{0.22in}
+{\bfseries Submitted by\par}
+{\bfseries\fontsize{14}{17}\selectfont [STUDENT NAME]\par}
+{\bfseries [STUDENT ID]\par}
+\vspace{0.22in}
+{\bfseries Under the Guidance of\par}
+[INTERNAL GUIDE NAME]\par
+[DESIGNATION]\par
+\vspace{0.45in}
+{\bfseries\fontsize{14}{17}\selectfont Department of Computer Engineering\par}
+{\bfseries\fontsize{13}{16}\selectfont Devang Patel Institute of Advance Technology and Research (DEPSTAR)\par}
+Charotar University of Science and Technology\par
+\vspace{0.12in}
+{\bfseries [MONTH YEAR]\par}
+\end{singlespace}
+\end{titlepage}
+
+\chapter*{College Certificate}
+This is to certify that the Summer Internship report entitled ``[PROJECT TITLE]'' has been carried out by [STUDENT NAME], bearing Student ID [STUDENT ID], under my supervision and guidance during the academic year [YEAR].
+
+The work presented in this report is found satisfactory and is submitted to the Department of Computer Engineering, Devang Patel Institute of Advance Technology and Research (DEPSTAR), as a part of the requirements of the Summer Internship.
+
+\vspace{1.6in}
+\begin{center}
+\begin{tabular}{p{0.45\textwidth}p{0.45\textwidth}}
+\centering\rule{2.3in}{0.4pt} & \centering\arraybackslash\rule{2.3in}{0.4pt}\\
+\centering Internal Guide & \centering\arraybackslash Head of Department
+\end{tabular}
+\end{center}
+\clearpage
+
+\chapter*{Company / Organization Certificate}
+The company or organization certificate should be inserted on this page as provided by the internship organization. The certificate generally includes the student name, internship duration, project title, mentor details, organization seal and authorized signature.
+
+If the certificate is available as an image or scanned PDF, replace this placeholder page with the official certificate while maintaining the same page sequence.
+
+\vspace{2.2in}
+\begin{center}\bfseries [Insert official company certificate here]\end{center}
+\clearpage
+
+\pagestyle{fancy}
+\pagenumbering{roman}
+\setcounter{page}{1}
+\renewcommand{\chapterheader}{PRELIMINARY PAGES}
+\frontchapter{Acknowledgement}
+I express my sincere gratitude to [COMPANY / ORGANIZATION NAME] for providing me the opportunity to complete my summer internship and to gain practical exposure to real-world development practices. The internship helped me understand professional working culture, technical documentation, requirement analysis and systematic implementation of project work.
+
+I am thankful to my company mentor [MENTOR NAME] for constant guidance, valuable suggestions and technical support throughout the internship period. I also extend my sincere thanks to my internal guide [INTERNAL GUIDE NAME] and the Department of Computer Engineering, DEPSTAR, for academic guidance and encouragement.
+
+Finally, I am grateful to all faculty members, friends and family members who directly or indirectly supported me during the successful completion of this internship report.
+\clearpage
+
+\frontchapter{Abstract}
+This summer internship report presents the work carried out on the project entitled ``[PROJECT TITLE]''. The purpose of the internship was to understand the practical application of software engineering principles, study the working environment of the organization and implement a structured solution according to defined requirements.
+
+The project work included requirement study, system design, module implementation, testing, documentation and presentation of results. The report describes the company profile, internship objectives, tools and technologies used, methodology followed, implementation details, testing observations and learning outcomes. The work helped in connecting academic concepts with professional software development practices.
+
+The conclusion of the internship indicates that systematic planning, modular design, testing and documentation are essential for producing reliable and maintainable software solutions.
+\clearpage
+
+\tableofcontents
+\clearpage
+\listoffigures
+\clearpage
+\listoftables
+\clearpage
+
+\frontchapter{Description of Company / Organization}
+[COMPANY / ORGANIZATION NAME] is an organization working in the field of [DOMAIN / INDUSTRY]. The organization provides services related to [SERVICE AREA] and supports clients through planning, development, deployment and maintenance of technology solutions.
+
+The administrative structure of the organization consists of management, project leads, mentors, developers, quality assurance members and support staff. During the internship, the work was assigned under the guidance of a company mentor, and regular discussions were conducted to understand requirements, track progress and improve the quality of implementation.
+
+The internship group was associated with the [TEAM / DIVISION NAME] division. The main functions of the division include requirement study, software development, testing, documentation and client-focused solution delivery. The customer profile of the organization includes academic institutions, business clients, internal teams and end users depending on the project domain.
+\clearpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\renewcommand{\chapterheader}{CHAPTER 1}
+\chapter{Introduction and Internship Overview}
+\section{Introduction}
+Internship training is an important component of professional education because it enables students to apply classroom learning to practical situations. During the internship, students observe organizational procedures, understand real project workflows and develop discipline in documentation, communication and implementation.
+
+The project entitled ``[PROJECT TITLE]'' was selected to understand how a software solution is planned, designed, implemented and evaluated. The report has been prepared in a structured academic format so that the work can be clearly presented for evaluation and future reference.
+
+\section{Objectives of Internship}
+The major objective of the internship was to obtain practical knowledge of project development and to understand the expectations of an organization from an intern. The internship also focused on improving technical skills, problem-solving ability and report writing practice.
+
+\begin{itemize}[leftmargin=0.35in,itemsep=0pt,parsep=0pt]
+\item To understand the working environment and administrative structure of the organization.
+\item To study the requirements of the assigned project in a systematic manner.
+\item To design and implement project modules using appropriate tools and technologies.
+\item To test the developed solution and document the observations clearly.
+\item To prepare a professional internship report using standard academic formatting.
+\end{itemize}
+
+\section{Scope of Work}
+The scope of work includes requirement analysis, design of modules, implementation of selected features, testing of outputs and preparation of documentation. The work is limited to the project requirements assigned during the internship period and can be extended in future by adding advanced features, deployment support and performance improvements.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\textwidth]{internship_workflow.png}
+\caption{Internship Work Flow}
+\end{figure}
+
+\section{Report Organization}
+The report is divided into chapters in a sequential manner. The first chapter introduces the internship and project scope. The second chapter explains the system study and methodology. The third chapter presents implementation details. The fourth chapter discusses testing, learning outcomes and future scope, followed by conclusion and references.
+\clearpage
+
+\renewcommand{\chapterheader}{CHAPTER 2}
+\chapter{System Study and Methodology}
+\section{Requirement Analysis}
+Requirement analysis is the process of identifying the needs of users and converting them into clear functional and non-functional requirements. It helps in reducing ambiguity and provides a foundation for design and implementation.
+
+\subsection{Functional requirements}
+\begin{itemize}[leftmargin=0.35in,itemsep=0pt,parsep=0pt]
+\item The system should allow users to access the required features in a simple and organized manner.
+\item The system should store important records and retrieve them when required.
+\item The system should generate useful output that supports decision making and documentation.
+\item The system should provide proper validation and error handling for reliable operation.
+\end{itemize}
+
+\subsection{Non-functional requirements}
+\begin{itemize}[leftmargin=0.35in,itemsep=0pt,parsep=0pt]
+\item The system should be easy to maintain and extend.
+\item The interface should be understandable for users.
+\item The solution should follow modular design to reduce dependency between components.
+\item The documentation should be clear enough for future reference.
+\end{itemize}
+
+\section{Tools and Technologies}
+The selection of tools and technologies depends on project requirements, available resources and organizational standards. The following table summarizes the commonly used components in the project environment.
+
+\begin{table}[h!]
+\centering
+\caption{Tools and Technologies Used}
+\begin{tabular}{|c|p{1.7in}|p{3.0in}|}
+\hline
+\textbf{Sr. No.} & \textbf{Tool / Technology} & \textbf{Purpose}\\ \hline
+1 & [Programming Language] & Implementation of business logic and project modules\\ \hline
+2 & [Database] & Storage and retrieval of structured project data\\ \hline
+3 & [Framework / Library] & Rapid development and integration of features\\ \hline
+4 & [Version Control] & Tracking changes and maintaining project history\\ \hline
+5 & [Documentation Tool] & Preparation of report, diagrams and references\\ \hline
+\end{tabular}
+\end{table}
+
+\section{Methodology}
+The methodology followed during the internship was incremental and documentation-oriented. Each task was first discussed, then divided into smaller parts, implemented, tested and reviewed. This approach helped in maintaining clarity and reducing errors during development.
+
+\begin{enumerate}[leftmargin=0.35in,itemsep=0pt,parsep=0pt]
+\item Understand the project domain and define the expected output.
+\item Prepare a basic design of modules, data flow and user interaction.
+\item Implement the modules one by one and test each feature separately.
+\item Integrate the modules and verify the overall working of the system.
+\item Prepare documentation with figures, tables, conclusions and references.
+\end{enumerate}
+\clearpage
+
+\renewcommand{\chapterheader}{CHAPTER 3}
+\chapter{Implementation Details}
+\section{Module Description}
+The implementation was divided into modules to maintain clarity and reduce complexity. Each module performs a specific function and communicates with other modules according to the system design.
+
+\subsection{Input module}
+The input module is responsible for collecting information from the user and validating it before further processing. Proper validation ensures that incorrect or incomplete data does not affect the system output.
+
+\subsection{Processing module}
+The processing module contains the main logic of the project. It applies rules, calculations, conditions or service calls according to the requirements. This module was designed to be reusable and easy to update.
+
+\subsection{Output module}
+The output module presents the processed result in a clear and readable format. Depending on the project requirement, the output may be displayed on screen, saved in the database or included in a generated report.
+
+\section{System Architecture}
+The architecture of the proposed system follows a layered approach. The user interface layer interacts with the user, the application layer processes requests, the database layer stores information and the documentation layer supports report generation.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\textwidth]{system_architecture.png}
+\caption{Proposed System Architecture}
+\end{figure}
+
+\section{Database and Data Flow}
+The database design stores project entities in a structured manner. The data flow begins from user input, passes through validation and processing, and finally results in output generation. Maintaining a proper data flow reduces duplication and improves reliability.
+
+\section{Challenges Faced}
+The major challenges faced during the internship included understanding existing requirements, selecting suitable tools, maintaining consistency in implementation and preparing documentation according to academic guidelines. These challenges were handled through mentor discussions, regular review and systematic testing.
+\clearpage
+
+\renewcommand{\chapterheader}{CHAPTER 4}
+\chapter{Testing, Learning Outcomes and Future Scope}
+\section{Testing Strategy}
+Testing was performed to verify whether the developed modules produced correct and expected results. Both individual module testing and integrated testing were considered during the internship work.
+
+\begin{table}[h!]
+\centering
+\caption{Testing Summary}
+\begin{tabular}{|c|p{1.7in}|p{3.0in}|}
+\hline
+\textbf{Sr. No.} & \textbf{Test Area} & \textbf{Observation}\\ \hline
+1 & Input validation & Invalid input is identified and handled properly\\ \hline
+2 & Module execution & Each module performs the assigned task correctly\\ \hline
+3 & Data storage & Records are stored and retrieved as expected\\ \hline
+4 & Output verification & Generated output matches the defined requirement\\ \hline
+5 & Documentation review & Report sections follow the required academic structure\\ \hline
+\end{tabular}
+\end{table}
+
+\section{Learning Outcomes}
+The internship provided exposure to real project development and helped in improving both technical and professional skills. The major learning outcomes are listed below.
+
+\begin{itemize}[leftmargin=0.35in,itemsep=0pt,parsep=0pt]
+\item Understanding of organizational workflow and project responsibility.
+\item Improved ability to convert requirements into implementation tasks.
+\item Better knowledge of documentation, testing and presentation of work.
+\item Improved communication with mentors and team members.
+\item Awareness of the importance of clean formatting in academic reports.
+\end{itemize}
+
+\section{Future Scope}
+The project can be extended by adding advanced features, improving user interface design, integrating additional services and deploying the system for real users. Future work may also include performance optimization, security improvements and automated report generation.
+\clearpage
+
+\renewcommand{\chapterheader}{CONCLUSION}
+\chapter*{Conclusion}
+\addcontentsline{toc}{chapter}{Conclusion}
+The summer internship was a valuable opportunity to connect academic knowledge with practical development work. The assigned project helped in understanding the importance of requirement analysis, modular design, implementation discipline, testing and documentation.
+
+The report presents the internship work in a structured manner according to the prescribed academic format. The experience gained during the internship will be useful for future academic projects, professional development and industry-oriented problem solving.
+\clearpage
+
+\renewcommand{\chapterheader}{REFERENCES}
+\chapter*{References}
+\addcontentsline{toc}{chapter}{References}
+\begin{enumerate}[label={[\arabic*]},leftmargin=0.35in,itemsep=6pt]
+\item Author name, ``Research paper title'', Conference name / Journal name, page number, year of publication.
+\item Author name, Book title, Publisher, year of publication.
+\item https://www.example.com/full-reference-page
+\item https://www.example.org/project-documentation-page
+\end{enumerate}
+
+\end{document}

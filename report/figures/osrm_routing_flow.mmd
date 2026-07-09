@@ -1,0 +1,9 @@
+flowchart TD
+  A[Route Request] --> B[Routing Service]
+  B --> C[OSRM Client]
+  C --> D{External APIs Enabled?}
+  D -- Yes --> E[Local OSRM Engine]
+  D -- No --> F[Offline Stub]
+  E --> G[Persist Route and Stops]
+  F --> G
+  G --> H[Distance ETA Geometry Response]

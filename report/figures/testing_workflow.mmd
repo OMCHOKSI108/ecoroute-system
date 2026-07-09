@@ -1,0 +1,7 @@
+flowchart LR
+  A[Jest Unit/API Tests] --> B[Supertest HTTP Assertions]
+  B --> C[Mocked OSRM or Offline Mode]
+  C --> D[Database Rule Assertions]
+  D --> E[Postman Collection]
+  E --> F[Swagger Review]
+  F --> G[Manual Smoke Test]

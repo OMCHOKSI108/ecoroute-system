@@ -1,0 +1,11 @@
+flowchart TD
+  A[Dispatch Request] --> B[Authenticate and Authorize]
+  B --> C[Validate DTO with Zod]
+  C --> D[Open Transaction]
+  D --> E[Lock Vehicle Row]
+  E --> F[Lock Pickup Rows]
+  F --> G{Capacity and Status Valid?}
+  G -- No --> H[Rollback and Return Conflict]
+  G -- Yes --> I[Assign Pickups and Update Vehicle Load]
+  I --> J[Write Audit Log]
+  J --> K[Commit and Return Response]

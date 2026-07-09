@@ -1,0 +1,9 @@
+flowchart LR
+  A[Client Request] --> B[Express Router]
+  B --> C[Security Middleware]
+  C --> D[Zod Validation]
+  D --> E[Controller]
+  E --> F[Service]
+  F --> G[Repository]
+  G --> H[(PostgreSQL/PostGIS)]
+  F --> I[JSON Response]

@@ -1,0 +1,13 @@
+flowchart TB
+  root[ecoroute_system]
+  root --> backend[backend/src]
+  backend --> routes
+  backend --> controllers
+  backend --> schemas
+  backend --> services
+  backend --> repositories
+  backend --> middlewares
+  backend --> clients
+  root --> db[backend/db/migrations]
+  root --> frontend[frontend Next.js]
+  root --> docs[docs and testing]
