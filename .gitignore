@@ -45,6 +45,7 @@ backend/coverage/
 # Internship / LaTeX report documents
 *.docx
 *.pdf
+!docs/reports/*.pdf
 *.aux
 *.out
 *.lof

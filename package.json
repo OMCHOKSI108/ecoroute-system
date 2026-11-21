@@ -17,6 +17,7 @@
     "docker:up": "docker compose up --build",
     "docker:up:d": "docker compose up -d --build",
     "docker:down": "docker compose down",
-    "docker:logs": "docker compose logs -f"
+    "docker:logs": "docker compose logs -f",
+    "reports:pdf": "node scripts/generate-pdf-reports.js"
   }
 }

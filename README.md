@@ -11,6 +11,18 @@ dashboard metrics.
 
 ![system_architecture](docs/system.png)
 
+## 📊 Quality Assurance & Engineering Reports
+
+EcoRoute has undergone full-stack live verification, multi-role security testing, and architectural audits. All audit documents are available in **Markdown** and **Publication-Ready PDF** formats:
+
+| Document | Format | Description |
+| :--- | :---: | :--- |
+| **Executive Summary & Quality Scorecard** | [📕 PDF](docs/reports/00_EXECUTIVE_SUMMARY_CONSOLIDATED_REPORT.pdf) · [📄 MD](docs/reports/00_EXECUTIVE_SUMMARY_CONSOLIDATED_REPORT.md) | High-level scorecard (100% pass across 10 E2E & 116 unit tests), architecture, and summary of findings. |
+| **System Performance, Security & Architecture Audit** | [📕 PDF](docs/reports/01_PERFORMANCE_SECURITY_ARCHITECTURE_AUDIT.pdf) · [📄 MD](docs/reports/01_PERFORMANCE_SECURITY_ARCHITECTURE_AUDIT.md) | Multi-layer architectural audit, connection pool tuning, and transaction lock analysis. |
+| **Backend QA & Business Logic Verification Report** | [📕 PDF](docs/reports/02_BACKEND_QA_LOGIC_VERIFICATION_REPORT.pdf) · [📄 MD](docs/reports/02_BACKEND_QA_LOGIC_VERIFICATION_REPORT.md) | 65 live API test assertions verifying multi-role authentication, PostGIS spatial queries, and capacity checks. |
+| **Full-Stack Playwright End-to-End Test Report** | [📕 PDF](docs/reports/03_FULLSTACK_PLAYWRIGHT_E2E_REPORT.pdf) · [📄 MD](docs/reports/03_FULLSTACK_PLAYWRIGHT_E2E_REPORT.md) | 10 browser-driven full-stack test scenarios testing user journeys from registration to driver telemetry. |
+| 👉 **Full Reports Showcase** | [📑 docs/REPORTS.md](docs/REPORTS.md) | Complete directory overview with metrics, runbooks, and test execution details. |
+
 ## System Overview
 
 EcoRoute Engine automates the dispatch workflow for circular economy logistics fleets.
