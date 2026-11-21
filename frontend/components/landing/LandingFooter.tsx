@@ -33,7 +33,7 @@ export function LandingFooter() {
             <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-700">Company</h4>
             <ul className="space-y-2">
               <li><span className="text-sm text-gray-400">EcoRoute Systems</span></li>
-              <li><span className="text-sm text-gray-400">contact@ecoroute.io</span></li>
+              <li><a href="mailto:omchoksi99@gmail.com" className="text-sm text-gray-400 transition-colors hover:text-emerald-600">omchoksi99@gmail.com</a></li>
             </ul>
           </div>
         </div>

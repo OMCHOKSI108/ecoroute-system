@@ -490,3 +490,10 @@ Current root remote:
 ```text
 https://github.com/OMCHOKSI108/ecoroute-system
 ```
+
+## 📬 Contact & Maintainer
+
+- **Developer / Maintainer**: Om Choksi
+- **Email**: [omchoksi99@gmail.com](mailto:omchoksi99@gmail.com)
+- **Project Repository**: [https://github.com/OMCHOKSI108/ecoroute-system](https://github.com/OMCHOKSI108/ecoroute-system)
+
