@@ -9,6 +9,8 @@ local OSRM. It provides organization-scoped APIs for business locations, pickup 
 vehicle capacity management, dispatch assignment, route generation, audit logging, and
 dashboard metrics.
 
+![system_architecture](docs/system.png)
+
 ## System Overview
 
 EcoRoute Engine automates the dispatch workflow for circular economy logistics fleets.
