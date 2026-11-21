@@ -108,40 +108,57 @@ export async function autoAssign(
 
     if (batch.length > 0) {
       const pickupIds = batch.map((p) => p.id);
+      let assigned = false;
 
       await withTransaction(async (client) => {
+        const lockedVehicle = await dispatchRepo.lockVehicle(client, vehicle.id, orgId);
+        if (!lockedVehicle || lockedVehicle.status !== 'available') {
+          return;
+        }
+
+        const lockedPickups = await dispatchRepo.lockPickups(client, pickupIds, orgId);
+        if (
+          lockedPickups.length !== pickupIds.length ||
+          lockedPickups.some((p) => p.status !== 'pending')
+        ) {
+          return;
+        }
+
         const updatedPickups = await dispatchRepo.assignPickupsToVehicle(
           client,
           pickupIds,
           vehicle.id,
         );
-        if (updatedPickups.length > 0) {
+        if (updatedPickups.length === pickupIds.length) {
           await dispatchRepo.updateVehicleDispatched(
             client,
             vehicle.id,
             batch.reduce((sum, p) => sum + (p.estimated_weight_kg !== null ? parseFloat(p.estimated_weight_kg) : 0), 0),
           );
+          assigned = true;
         }
       });
 
-      assignments.push({
-        vehicleId: vehicle.id,
-        vehiclePlate: vehicle.plate_number,
-        pickupIds,
-      });
+      if (assigned) {
+        assignments.push({
+          vehicleId: vehicle.id,
+          vehiclePlate: vehicle.plate_number,
+          pickupIds,
+        });
 
-      const assignedIds = new Set(pickupIds);
-      remainingPickups = remaining.filter((p) => !assignedIds.has(p.id));
+        const assignedIds = new Set(pickupIds);
+        remainingPickups = remaining.filter((p) => !assignedIds.has(p.id));
 
-      logAudit({
-        organizationId: orgId,
-        actorId,
-        actorRole,
-        action: 'auto_dispatch_assignment',
-        entityType: 'vehicle',
-        entityId: vehicle.id,
-        metadata: { pickupIds, count: pickupIds.length, mode: 'auto' },
-      });
+        logAudit({
+          organizationId: orgId,
+          actorId,
+          actorRole,
+          action: 'auto_dispatch_assignment',
+          entityType: 'vehicle',
+          entityId: vehicle.id,
+          metadata: { pickupIds, count: pickupIds.length, mode: 'auto' },
+        });
+      }
     }
   }
 

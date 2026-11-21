@@ -14,5 +14,5 @@ routesRouter.use(authenticate);
 
 routesRouter.post('/generate', requireRole('admin', 'dispatcher'), generateRoute);
 routesRouter.get('/', requireRole('admin', 'dispatcher'), listRoutes);
-routesRouter.get('/:id', requireRole('admin', 'dispatcher'), getRouteById);
+routesRouter.get('/:id', requireRole('admin', 'dispatcher', 'driver'), getRouteById);
 routesRouter.patch('/:id/status', requireRole('admin', 'dispatcher'), updateRouteStatus);

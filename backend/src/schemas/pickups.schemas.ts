@@ -10,7 +10,7 @@ export const createPickupSchema = z.object({
 
 // Only transitions callable via the PATCH endpoint; service enforces valid source state
 export const updatePickupStatusSchema = z.object({
-  status: z.enum(['cancelled', 'completed']),
+  status: z.enum(['in_progress', 'cancelled', 'completed']),
 });
 
 export const listPickupsQuerySchema = z.object({

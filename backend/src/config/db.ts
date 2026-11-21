@@ -1,8 +1,10 @@
 import { Pool, PoolClient, QueryResult, QueryResultRow } from 'pg';
 import { config } from './env';
 
-const sslConfig = config.nodeEnv === 'production'
-  ? { rejectUnauthorized: false }
+const sslRejectUnauthorized = process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== 'false';
+const isLocalHost = ['localhost', '127.0.0.1', 'db', 'postgres'].includes(config.db.host);
+const sslConfig = process.env.DATABASE_SSL === 'true' || (config.nodeEnv === 'production' && process.env.DATABASE_SSL !== 'false' && !isLocalHost)
+  ? { rejectUnauthorized: sslRejectUnauthorized }
   : false;
 
 export const pool = new Pool({
@@ -12,7 +14,7 @@ export const pool = new Pool({
   user: config.db.user,
   password: config.db.password,
   ssl: sslConfig,
-  max: 10,
+  max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,
 });

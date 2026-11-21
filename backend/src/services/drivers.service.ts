@@ -61,8 +61,7 @@ export async function getDriverById(id: string, orgId: string): Promise<DriverWi
   const row = await driverRepo.findDriverById(id, orgId);
   if (!row) throw new NotFoundError('Driver not found');
 
-  const vehicles = await vehicleRepo.findVehiclesByOrg(orgId, { page: 1, limit: 1 });
-  const assignedVehicle = vehicles.data.find(v => v.driver_id === id) ?? null;
+  const assignedVehicle = await vehicleRepo.findVehicleByDriverId(id, orgId);
 
   return { ...toDriverResponse(row), assignedVehicle };
 }

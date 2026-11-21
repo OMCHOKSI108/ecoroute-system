@@ -1,0 +1,22 @@
+{
+  "name": "ecoroute-system",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "npm run build --prefix backend && npm run build --prefix frontend",
+    "build:backend": "npm run build --prefix backend",
+    "build:frontend": "npm run build --prefix frontend",
+    "lint": "npm run lint --prefix backend && npm run lint --prefix frontend",
+    "typecheck": "npm run typecheck --prefix backend && cd frontend && npx tsc --noEmit",
+    "test": "npm test --prefix backend",
+    "test:backend": "npm test --prefix backend",
+    "test:e2e": "cd frontend && npx playwright test",
+    "test:e2e:ui": "cd frontend && npx playwright test --ui",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "docker:up": "docker compose up --build",
+    "docker:up:d": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f"
+  }
+}

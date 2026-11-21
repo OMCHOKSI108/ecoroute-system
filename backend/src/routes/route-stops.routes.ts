@@ -15,4 +15,4 @@ routeStopsRouter.use(authenticate);
 routeStopsRouter.get('/', requireRole('admin', 'dispatcher'), listRouteStops);
 routeStopsRouter.get('/by-route/:routeId', requireRole('admin', 'dispatcher', 'driver'), getRouteStopsByRouteId);
 routeStopsRouter.get('/:id', requireRole('admin', 'dispatcher', 'driver'), getRouteStopById);
-routeStopsRouter.patch('/:id/status', requireRole('admin', 'dispatcher'), updateRouteStopStatus);
+routeStopsRouter.patch('/:id/status', requireRole('admin', 'dispatcher', 'driver'), updateRouteStopStatus);

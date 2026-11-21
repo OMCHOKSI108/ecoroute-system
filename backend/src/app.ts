@@ -29,8 +29,22 @@ import { notificationsRouter } from './routes/notifications.routes';
 export function createApp(): Application {
   const app = express();
 
-  app.use(helmet());
-  app.use(cors({ origin: config.frontendUrl, credentials: true }));
+  const allowedOrigins = [
+    config.frontendUrl,
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:5173',
+  ].filter(Boolean);
+  app.use(cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin) || config.nodeEnv === 'development' || config.nodeEnv === 'test') {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  }));
   app.use(express.json({ limit: '1mb' }));
   app.use(requestLogger);
 

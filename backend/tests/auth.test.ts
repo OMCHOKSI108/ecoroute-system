@@ -2,6 +2,7 @@ import request from 'supertest';
 
 jest.mock('../src/config/db');
 jest.mock('../src/repositories/auth.repository');
+jest.mock('../src/services/mail.service');
 jest.mock('bcryptjs');
 
 import bcryptjs from 'bcryptjs';

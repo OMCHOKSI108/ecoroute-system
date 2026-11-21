@@ -48,54 +48,6 @@ export async function insertAuditLog(data: CreateAuditLogData): Promise<void> {
   );
 }
 
-export async function findUserByEmail(email:string){
-  await query(`SELECT * FROM users WHERE email = $1`, [email]);
-}
-
-export async function createPasswordResetOtp(userId: string, otp: string, expiryMinutes: number): Promise<void> {
-
-  
-  await query(
-    `INSERT INTO password_reset_otps (user_id, otp) VALUES ($1, $2)`,
-    [userId, otp]
-  );
-}
-
-
-
-export async function findLatestValidResetOtp(userId: string) {
-  await query(
-    `SELECT * FROM password_reset_otps
-     WHERE user_id = $1 AND used_at IS NULL AND created_at >= NOW() - INTERVAL '${ExpiryMinutes} minutes'
-     ORDER BY created_at DESC
-     LIMIT 1`,
-    [userId]
-  );
-
-}
-
-export async function incrementResetOtpAttempts(id: string) {
-  await query(
-    `UPDATE password_reset_otps SET attempts = attempts + 1 WHERE id = $1`,
-    [id]
-  );
-}
-
-export async function markResetOtpUsed(id: string) {
-  await query(
-    `UPDATE password_reset_otps SET used_at = NOW() WHERE id = $1`,
-    [id]
-  );
-}
-
-export async function updateUserPassword(userId: string, passwordHash: string) {
-  await query(
-    `UPDATE users SET password_hash = $1, updated_at = NOW() WHERE id = $2`,
-    [passwordHash, userId]
-  );
-}
-
-
 export async function findAuditLogs(
   orgId: string,
   filters: FindAuditLogsFilters,

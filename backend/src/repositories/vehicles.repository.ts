@@ -82,6 +82,17 @@ export async function findVehicleByIdAndOrg(
   return result.rows[0] ?? null;
 }
 
+export async function findVehicleByDriverId(
+  driverId: string,
+  orgId: string,
+): Promise<VehicleRow | null> {
+  const result = await query<VehicleRow>(
+    'SELECT * FROM vehicles WHERE driver_id = $1 AND organization_id = $2 LIMIT 1',
+    [driverId, orgId],
+  );
+  return result.rows[0] ?? null;
+}
+
 export async function updateVehicle(
   id: string,
   orgId: string,

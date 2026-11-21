@@ -59,20 +59,35 @@ export async function updateUserRole(
   return result.rows[0] ?? null;
 }
 
+const ALLOWED_USER_UPDATE_COLUMNS = new Set([
+  'first_name',
+  'last_name',
+  'phone',
+  'is_active',
+  'role',
+  'driver_status',
+]);
+
 export async function updateUser(
   id: string,
   fields: Record<string, unknown>,
+  orgId?: string,
 ): Promise<UserRow | null> {
-  const keys = Object.keys(fields);
-  if (keys.length === 0) {
+  const safeKeys = Object.keys(fields).filter((k) => ALLOWED_USER_UPDATE_COLUMNS.has(k));
+  if (safeKeys.length === 0) {
     const existing = await findUserById(id);
     return existing;
   }
-  const setClauses = keys.map((k, i) => `${k} = $${i + 2}`);
-  const values = Object.values(fields);
+  const setClauses = safeKeys.map((k, i) => `${k} = $${i + 2}`);
+  const values = safeKeys.map((k) => fields[k]);
+  const whereClause = orgId
+    ? `WHERE id = $1 AND organization_id = $${safeKeys.length + 2}`
+    : `WHERE id = $1`;
+  const params = orgId ? [id, ...values, orgId] : [id, ...values];
+
   const result = await query<UserRow>(
-    `UPDATE users SET ${setClauses.join(', ')}, updated_at = NOW() WHERE id = $1 RETURNING *`,
-    [id, ...values],
+    `UPDATE users SET ${setClauses.join(', ')}, updated_at = NOW() ${whereClause} RETURNING *`,
+    params,
   );
   return result.rows[0] ?? null;
 }

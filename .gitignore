@@ -7,8 +7,10 @@
 # Dependencies
 node_modules/
 backend/node_modules/
-frontend/
-frontend
+frontend/node_modules/
+frontend/.next/
+frontend/test-results/
+frontend/playwright-report/
 
 
 # Build output
@@ -39,3 +41,14 @@ backend/coverage/
 
 # TypeScript cache
 *.tsbuildinfo
+
+# Internship / LaTeX report documents
+*.docx
+*.pdf
+*.aux
+*.out
+*.lof
+*.lot
+*.toc
+*.tex
+report/

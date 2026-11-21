@@ -1,0 +1,320 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  # ============================================================================
+  # 1. CODE QUALITY & STATIC CHECKS
+  # ============================================================================
+  code-quality:
+    name: Code Quality & Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Root Dependencies
+        run: npm ci || npm install
+
+      - name: Install Backend Dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Backend Type Check (tsc)
+        working-directory: backend
+        run: npm run lint
+
+      - name: Frontend Code Quality & Lint (ESLint)
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Frontend Type Check (tsc)
+        working-directory: frontend
+        run: npx tsc --noEmit
+
+  # ============================================================================
+  # 2. BACKEND UNIT & INTEGRATION TESTS
+  # ============================================================================
+  backend-tests:
+    name: Backend Unit & Integration Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4-alpine
+        env:
+          POSTGRES_DB: ecoroute_db
+          POSTGRES_USER: ecoroute_user
+          POSTGRES_PASSWORD: ecoroute_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      NODE_ENV: test
+      PORT: 5000
+      APP_NAME: EcoRoute Engine
+      API_PREFIX: /api/v1
+      DATABASE_HOST: localhost
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ecoroute_db
+      DATABASE_USER: ecoroute_user
+      DATABASE_PASSWORD: ecoroute_password
+      DATABASE_URL: postgresql://ecoroute_user:ecoroute_password@localhost:5432/ecoroute_db
+      JWT_SECRET: ecoroute-test-jwt-secret-key-32-chars-long
+      JWT_REFRESH_SECRET: ecoroute-test-refresh-secret-key-32-chars
+      OSRM_BASE_URL: http://localhost:5000
+      OSRM_TIMEOUT_MS: 5000
+      OFFLINE_MODE: 'true'
+      ENABLE_EXTERNAL_APIS: 'false'
+      FRONTEND_URL: http://localhost:3001
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Backend Dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Run Database Migrations
+        working-directory: backend
+        run: node migrations.js
+
+      - name: Run Jest Test Suite with Coverage
+        working-directory: backend
+        run: npm run test:coverage
+
+      - name: Upload Test Coverage Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backend-coverage
+          path: backend/coverage/
+          retention-days: 14
+
+  # ============================================================================
+  # 3. PRODUCTION BUILDS CREATION
+  # ============================================================================
+  build:
+    name: Build Creation & Artifacts Packaging
+    runs-on: ubuntu-latest
+    needs: [code-quality]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Backend Dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Compile Backend (tsc)
+        working-directory: backend
+        run: npm run build
+
+      - name: Verify Backend Dist Output
+        working-directory: backend
+        run: |
+          if [ ! -f "dist/server.js" ]; then
+            echo "Error: Backend build did not output dist/server.js"
+            exit 1
+          fi
+          echo "✓ Backend built successfully."
+
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build Frontend Next.js Production Bundle
+        working-directory: frontend
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+          NEXT_PUBLIC_API_URL: http://localhost:5000/api/v1
+        run: npm run build
+
+      - name: Upload Backend Dist Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-dist
+          path: backend/dist/
+          retention-days: 14
+
+      - name: Upload Frontend Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-next-bundle
+          path: frontend/.next/
+          retention-days: 14
+
+  # ============================================================================
+  # 4. FULL-STACK PLAYWRIGHT E2E TESTS
+  # ============================================================================
+  e2e-tests:
+    name: Full-Stack Playwright E2E Tests
+    runs-on: ubuntu-latest
+    needs: [build, backend-tests]
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4-alpine
+        env:
+          POSTGRES_DB: ecoroute_db
+          POSTGRES_USER: ecoroute_user
+          POSTGRES_PASSWORD: ecoroute_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      NODE_ENV: test
+      PORT: 5000
+      APP_NAME: EcoRoute Engine
+      API_PREFIX: /api/v1
+      DATABASE_HOST: localhost
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ecoroute_db
+      DATABASE_USER: ecoroute_user
+      DATABASE_PASSWORD: ecoroute_password
+      DATABASE_URL: postgresql://ecoroute_user:ecoroute_password@localhost:5432/ecoroute_db
+      JWT_SECRET: ecoroute-test-jwt-secret-key-32-chars-long
+      JWT_REFRESH_SECRET: ecoroute-test-refresh-secret-key-32-chars
+      OSRM_BASE_URL: http://localhost:5000
+      OSRM_TIMEOUT_MS: 5000
+      OFFLINE_MODE: 'true'
+      ENABLE_EXTERNAL_APIS: 'false'
+      FRONTEND_URL: http://localhost:3001
+      NEXT_PUBLIC_API_URL: http://localhost:5000/api/v1
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Backend & Frontend Dependencies
+        run: |
+          cd backend && npm ci
+          cd ../frontend && npm ci
+
+      - name: Run Database Migrations
+        working-directory: backend
+        run: node migrations.js
+
+      - name: Install Playwright Browsers (Chromium)
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+
+      - name: Start Backend API Server
+        working-directory: backend
+        run: |
+          npm run build
+          node dist/server.js &
+          for i in $(seq 1 30); do
+            if curl -s http://localhost:5000/api/v1/health | grep -q '"status":"ok"'; then
+              echo "✓ Backend API is ready and healthy."
+              break
+            fi
+            echo "Waiting for backend... ($i/30)"
+            sleep 1
+          done
+
+      - name: Start Frontend Server
+        working-directory: frontend
+        run: |
+          npm run build
+          npx next start -p 3001 &
+          for i in $(seq 1 30); do
+            if curl -s -I http://localhost:3001 | grep -q -E "200|307|308"; then
+              echo "✓ Frontend server is ready."
+              break
+            fi
+            echo "Waiting for frontend... ($i/30)"
+            sleep 1
+          done
+
+      - name: Run Playwright End-to-End Test Suite
+        working-directory: frontend
+        run: npx playwright test
+
+      - name: Upload Playwright Test Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/
+          retention-days: 14
+
+  # ============================================================================
+  # 5. DOCKER CONTAINER BUILDS VALIDATION
+  # ============================================================================
+  docker-build:
+    name: Docker Container Image Builds
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Backend Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: false
+          tags: ecoroute-backend:ci-test
+
+      - name: Build Frontend Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: false
+          tags: ecoroute-frontend:ci-test

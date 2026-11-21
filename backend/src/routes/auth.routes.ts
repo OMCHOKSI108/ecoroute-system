@@ -11,7 +11,7 @@ import {
 
 const authLimiter = rateLimit({
   windowMs: config.rateLimitWindowMs,
-  max: 10,
+  max: config.nodeEnv === 'development' || config.nodeEnv === 'test' ? 1000 : Math.max(config.rateLimitMaxRequests, 200),
   standardHeaders: true,
   legacyHeaders: false,
   message: { 

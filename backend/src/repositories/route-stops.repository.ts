@@ -26,7 +26,7 @@ export async function findRouteStopsByOrg(
   orgId: string,
   opts: FindRouteStopsOpts,
 ): Promise<{ data: RouteStopRow[]; total: number }> {
-  const conditions: string[] = ['rs.organization_id = $1'];
+  const conditions: string[] = ['r.organization_id = $1'];
   const params: unknown[] = [orgId];
   let idx = 2;
 
@@ -43,13 +43,13 @@ export async function findRouteStopsByOrg(
   const offset = (opts.page - 1) * opts.limit;
 
   const countResult = await query<{ count: string }>(
-    `SELECT COUNT(*) FROM route_stops rs WHERE ${where}`,
+    `SELECT COUNT(*) FROM route_stops rs JOIN routes r ON r.id = rs.route_id WHERE ${where}`,
     params,
   );
   const total = parseInt(countResult.rows[0]?.count ?? '0', 10);
 
   const dataResult = await query<RouteStopRow>(
-    `SELECT rs.* FROM route_stops rs WHERE ${where} ORDER BY rs.stop_order ASC LIMIT $${idx} OFFSET $${idx + 1}`,
+    `SELECT rs.* FROM route_stops rs JOIN routes r ON r.id = rs.route_id WHERE ${where} ORDER BY rs.stop_order ASC LIMIT $${idx} OFFSET $${idx + 1}`,
     [...params, opts.limit, offset],
   );
 
@@ -94,4 +94,29 @@ export async function findRouteStopsByRouteId(
     [routeId, orgId],
   );
   return result.rows;
+}
+
+export async function createRouteStops(
+  client: any,
+  stops: {
+    routeId: string;
+    pickupId: string;
+    stopOrder: number;
+    latitude: number;
+    longitude: number;
+    address?: string | null;
+  }[],
+): Promise<RouteStopRow[]> {
+  if (!client || typeof client.query !== 'function') return [];
+  const rows: RouteStopRow[] = [];
+  for (const s of stops) {
+    const res = await client.query(
+      `INSERT INTO route_stops (route_id, pickup_id, stop_order, latitude, longitude, address, status)
+       VALUES ($1, $2, $3, $4, $5, $6, 'pending')
+       RETURNING *`,
+      [s.routeId, s.pickupId, s.stopOrder, s.latitude, s.longitude, s.address ?? null],
+    );
+    rows.push(res.rows[0]!);
+  }
+  return rows;
 }

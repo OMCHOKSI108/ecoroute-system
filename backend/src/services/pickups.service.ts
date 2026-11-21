@@ -43,6 +43,7 @@ export function toPickupResponse(row: pickupRepo.PickupRow): PickupResponse {
 
 const VALID_TRANSITIONS: Record<string, string[]> = {
   cancelled: ['pending', 'assigned'],
+  in_progress: ['assigned'],
   completed: ['in_progress'],
 };
 

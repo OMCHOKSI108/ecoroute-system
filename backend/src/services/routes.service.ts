@@ -1,5 +1,6 @@
 import { withTransaction } from '../config/db';
 import * as routesRepo from '../repositories/routes.repository';
+import { createRouteStops } from '../repositories/route-stops.repository';
 import { osrmTrip } from '../clients/osrm.client';
 import { logAudit } from './audit.service';
 import { ConflictError, NotFoundError } from '../types/errors';
@@ -92,6 +93,17 @@ export async function generateRoute(
     if (updatedPickupCount !== pickups.length) {
       throw new ConflictError('One or more pickups are no longer assignable to this route');
     }
+
+    await createRouteStops(
+      client,
+      pickups.map((p, idx) => ({
+        routeId: route.id,
+        pickupId: p.id,
+        stopOrder: idx + 1,
+        latitude: Number(p.lat),
+        longitude: Number(p.lng),
+      })),
+    );
 
     logAudit({
       organizationId: orgId,

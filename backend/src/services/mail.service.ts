@@ -10,6 +10,10 @@ type SendMailInput = {
 };
 
 export async function sendMail({ to, subject, html }: SendMailInput): Promise<void> {
+    if(!config.offline.enableEmail) {
+        console.warn('Email sending disabled (ENABLE_EMAIL=false). Skipping email send.');
+        return;
+    }
     if(!resend) {
         console.warn('Resend API key not configured. Skipping email send.');
         return;

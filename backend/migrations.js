@@ -239,7 +239,12 @@ async function verifyDatabase() {
 }
 
 async function main() {
-  if (process.env.NODE_ENV === 'production' && process.env.FORCE_RESET !== 'true') {
+  const shouldReset =
+    process.argv.includes('--reset') ||
+    process.env.RESET_DB === 'true' ||
+    process.env.FORCE_RESET === 'true';
+
+  if (shouldReset && process.env.NODE_ENV === 'production' && process.env.FORCE_RESET !== 'true') {
     throw new Error('Refusing to reset a production database without FORCE_RESET=true');
   }
 
@@ -250,14 +255,17 @@ async function main() {
   console.log(`Database: ${databaseName}`);
   console.log(`Host: ${required('DATABASE_HOST')}:${required('DATABASE_PORT')}`);
   console.log(`User: ${required('DATABASE_USER')}`);
+  console.log(`Reset requested: ${shouldReset ? 'yes' : 'no'}`);
   console.log('');
 
   await prepareSchemaAndExtensions();
-  await resetExistingDatabase();
+  if (shouldReset) {
+    await resetExistingDatabase();
+  }
   await runMigrations();
   await verifyDatabase();
 
-  console.log('\nDatabase reset and migrations applied successfully.');
+  console.log(`\nMigrations applied successfully${shouldReset ? ' (with database reset)' : ''}.`);
 }
 main().catch((error) => {
   console.error('\nMigration error');

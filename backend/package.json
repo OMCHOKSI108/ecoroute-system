@@ -7,8 +7,12 @@
     "dev": "nodemon --exec ts-node src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "test": "jest",
-    "migrate": "node -e \"const {execSync}=require('child_process');['001_auth','002_businesses','003_vehicles','004_pickup_requests','005_routes','006_audit_logs'].forEach(f=>execSync('psql \"'+process.env.DATABASE_URL+'\" -f db/migrations/'+f+'.sql',{stdio:'inherit'}))\""
+    "test:coverage": "jest --coverage",
+    "migrate": "node migrations.js",
+    "db:reset": "node migrations.js --reset"
   },
   "keywords": [],
   "author": "",

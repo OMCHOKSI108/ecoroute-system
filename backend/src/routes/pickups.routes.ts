@@ -21,5 +21,5 @@ pickupsRouter.get('/', requireRole('admin', 'dispatcher'), listPickups);
 pickupsRouter.get('/my', requireRole('driver'), getMyPickups);
 pickupsRouter.get('/nearby', requireRole('admin', 'dispatcher'), getNearbyPickups);
 pickupsRouter.get('/:id', requireRole('admin', 'dispatcher'), getPickupById);
-pickupsRouter.patch('/:id/status', requireRole('admin', 'dispatcher'), updatePickupStatus);
+pickupsRouter.patch('/:id/status', requireRole('admin', 'dispatcher', 'driver'), updatePickupStatus);
 pickupsRouter.post('/:id/cancel', requireRole('admin', 'dispatcher', 'business_user'), cancelPickup);
