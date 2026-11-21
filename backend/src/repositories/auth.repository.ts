@@ -19,7 +19,10 @@ export interface UserRow {
   password_hash: string;
   first_name: string;
   last_name: string;
-  role: 'admin' | 'dispatcher' | 'driver';
+  role: 'admin' | 'dispatcher' | 'driver' | 'business_user';
+  business_id?: string | null;
+  phone?: string | null;
+  driver_status?: string | null;
   is_active: boolean;
   created_at: Date;
   updated_at: Date;

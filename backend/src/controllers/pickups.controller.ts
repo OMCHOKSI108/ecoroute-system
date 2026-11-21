@@ -26,21 +26,27 @@ function parseQuery<T>(schema: z.ZodSchema<T>, q: unknown): T {
 export async function createPickup(req: Request, res: Response): Promise<void> {
   const orgId = req.user!.orgId;
   const requestedBy = req.user!.sub;
+  const role = req.user!.role;
+  const businessId = req.user!.businessId;
   const input = parseBody(createPickupSchema, req.body);
-  sendSuccess(res, await pickupService.createPickup(input, orgId, requestedBy), 201);
+  sendSuccess(res, await pickupService.createPickup(input, orgId, requestedBy, role, businessId), 201);
 }
 
 export async function listPickups(req: Request, res: Response): Promise<void> {
   const orgId = req.user!.orgId;
+  const role = req.user!.role;
+  const businessId = req.user!.businessId;
   const query = parseQuery(listPickupsQuerySchema, req.query);
-  const { data, total, page, limit } = await pickupService.listPickups(orgId, query);
+  const { data, total, page, limit } = await pickupService.listPickups(orgId, query, role, businessId);
   sendPaginated(res, data, total, page, limit);
 }
 
 export async function getPickupById(req: Request, res: Response): Promise<void> {
   const orgId = req.user!.orgId;
+  const role = req.user!.role;
+  const businessId = req.user!.businessId;
   const id = req.params['id'] as string;
-  sendSuccess(res, await pickupService.getPickupById(id, orgId));
+  sendSuccess(res, await pickupService.getPickupById(id, orgId, role, businessId));
 }
 
 export async function updatePickupStatus(req: Request, res: Response): Promise<void> {
@@ -51,8 +57,8 @@ export async function updatePickupStatus(req: Request, res: Response): Promise<v
 }
 
 export async function getMyPickups(req: Request, res: Response): Promise<void> {
-  const { sub: driverId, orgId } = req.user!;
-  sendSuccess(res, await pickupService.getMyPickups(driverId, orgId));
+  const { sub: userId, orgId, role, businessId } = req.user!;
+  sendSuccess(res, await pickupService.getMyPickups(userId, orgId, role, businessId));
 }
 
 export async function cancelPickup(req: Request, res: Response): Promise<void> {

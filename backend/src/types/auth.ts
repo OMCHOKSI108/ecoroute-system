@@ -5,4 +5,5 @@ export interface AuthPayload {
   orgId: string;
   role: Role;
   email: string;
+  businessId?: string | null;
 }

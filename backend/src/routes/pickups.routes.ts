@@ -15,11 +15,11 @@ export const pickupsRouter = Router();
 
 pickupsRouter.use(authenticate);
 
-pickupsRouter.post('/', requireRole('admin', 'dispatcher'), createPickup);
-pickupsRouter.get('/', requireRole('admin', 'dispatcher'), listPickups);
+pickupsRouter.post('/', requireRole('admin', 'dispatcher', 'business_user'), createPickup);
+pickupsRouter.get('/', requireRole('admin', 'dispatcher', 'business_user'), listPickups);
 // /my and /nearby must be registered before /:id — Express matches routes in declaration order
-pickupsRouter.get('/my', requireRole('driver'), getMyPickups);
+pickupsRouter.get('/my', requireRole('driver', 'business_user'), getMyPickups);
 pickupsRouter.get('/nearby', requireRole('admin', 'dispatcher'), getNearbyPickups);
-pickupsRouter.get('/:id', requireRole('admin', 'dispatcher'), getPickupById);
+pickupsRouter.get('/:id', requireRole('admin', 'dispatcher', 'driver', 'business_user'), getPickupById);
 pickupsRouter.patch('/:id/status', requireRole('admin', 'dispatcher', 'driver'), updatePickupStatus);
 pickupsRouter.post('/:id/cancel', requireRole('admin', 'dispatcher', 'business_user'), cancelPickup);

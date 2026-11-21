@@ -38,6 +38,9 @@ export async function listBusinesses(req: Request, res: Response): Promise<void>
 export async function getBusinessById(req: Request, res: Response): Promise<void> {
   const orgId = req.user!.orgId;
   const id = req.params['id'] as string;
+  if (req.user!.role === 'business_user' && req.user!.businessId !== id) {
+    throw new ValidationError('Access to other business records is restricted');
+  }
   const business = await businessService.getBusinessById(id, orgId);
   sendSuccess(res, business);
 }

@@ -4,7 +4,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { getToken, extractUser } from '@/lib/auth';
 import { apiGet } from '@/lib/api';
-import { ROUTES } from '@/lib/routes';
+import { ROUTES, getRoleLandingPage } from '@/lib/routes';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -74,11 +74,11 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
         </p>
         <div className="mt-6 flex gap-3">
           <button
-            onClick={() => router.push(ROUTES.DASHBOARD)}
+            onClick={() => router.push(getRoleLandingPage(userRole || undefined))}
             className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
             data-testid="return-dashboard-button"
           >
-            Back to Dashboard
+            Return to My Workspace
           </button>
           <button
             onClick={() => {

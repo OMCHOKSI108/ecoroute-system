@@ -8,10 +8,12 @@ import { StatusBadge } from '@/components/ui/StatusBadge';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { useAuth } from '@/hooks/useAuth';
 import { api, ApiError } from '@/lib/api';
 import type { Pickup, Business } from '@/lib/types';
 
 export default function PickupsPage() {
+  const { user } = useAuth();
   const [pickups, setPickups] = useState<Pickup[]>([]);
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,6 +27,8 @@ export default function PickupsPage() {
   const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+
+  const isBusinessUser = user?.role === 'business_user';
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -60,7 +64,8 @@ export default function PickupsPage() {
       return;
     }
 
-    if (!businessId) {
+    const effectiveBusinessId = isBusinessUser && user?.businessId ? user.businessId : businessId;
+    if (!effectiveBusinessId) {
       setFormError('Please select a business');
       return;
     }
@@ -68,7 +73,7 @@ export default function PickupsPage() {
     setSubmitting(true);
     try {
       await api.post('/pickups', {
-        businessId,
+        businessId: effectiveBusinessId,
         wasteCategory,
         estimatedWeightKg: parsedWeight,
         notes: notes || undefined,
@@ -84,12 +89,26 @@ export default function PickupsPage() {
     }
   };
 
+  const handleOpenModal = () => {
+    if (isBusinessUser && user?.businessId) {
+      setBusinessId(user.businessId);
+    }
+    setShowModal(true);
+  };
+
   return (
     <ProtectedAppPage>
       <div className="flex items-center justify-between">
-        <PageHeader title="Pickups" description="Manage on-demand and scheduled waste collection requests" />
-        <Button onClick={() => setShowModal(true)} data-testid="add-pickup-button">
-          Create Pickup
+        <PageHeader
+          title={isBusinessUser ? 'My Pickup Requests' : 'Pickups'}
+          description={
+            isBusinessUser
+              ? 'Request and track waste collections for your business location'
+              : 'Manage on-demand and scheduled waste collection requests'
+          }
+        />
+        <Button onClick={handleOpenModal} data-testid="add-pickup-button">
+          {isBusinessUser ? 'Request Pickup' : 'Create Pickup'}
         </Button>
       </div>
 
@@ -99,7 +118,11 @@ export default function PickupsPage() {
       {!loading && !error && pickups.length === 0 && (
         <EmptyState
           title="No pickups"
-          description="Click 'Create Pickup' to request a new waste collection."
+          description={
+            isBusinessUser
+              ? "Click 'Request Pickup' to submit a new waste collection request."
+              : "Click 'Create Pickup' to request a new waste collection."
+          }
         />
       )}
 
@@ -143,7 +166,9 @@ export default function PickupsPage() {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" data-testid="pickup-modal">
           <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-            <h3 className="mb-4 text-lg font-bold text-gray-900">Create Pickup Request</h3>
+            <h3 className="mb-4 text-lg font-bold text-gray-900">
+              {isBusinessUser ? 'Request Waste Pickup' : 'Create Pickup Request'}
+            </h3>
             {formError && (
               <div className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700" data-testid="pickup-form-error">
                 {formError}
@@ -154,21 +179,28 @@ export default function PickupsPage() {
                 <label htmlFor="businessSelect" className="block text-xs font-semibold uppercase text-gray-700">
                   Business Location *
                 </label>
-                <select
-                  id="businessSelect"
-                  required
-                  value={businessId}
-                  onChange={(e) => setBusinessId(e.target.value)}
-                  className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none"
-                  data-testid="pickup-business-select"
-                >
-                  <option value="">-- Select Partner Business --</option>
-                  {businesses.map((b) => (
-                    <option key={b.id} value={b.id}>
-                      {b.name} ({b.address})
-                    </option>
-                  ))}
-                </select>
+                {isBusinessUser && user?.businessId ? (
+                  <div className="mt-1 rounded-md border border-emerald-200 bg-emerald-50/50 p-2.5 text-sm text-emerald-900">
+                    <p className="font-semibold">{user.businessName || 'Linked Business'}</p>
+                    <p className="text-xs text-emerald-700 font-mono">Location ID: {user.businessId.slice(0, 8)}...</p>
+                  </div>
+                ) : (
+                  <select
+                    id="businessSelect"
+                    required
+                    value={businessId}
+                    onChange={(e) => setBusinessId(e.target.value)}
+                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none"
+                    data-testid="pickup-business-select"
+                  >
+                    <option value="">-- Select Partner Business --</option>
+                    {businesses.map((b) => (
+                      <option key={b.id} value={b.id}>
+                        {b.name} ({b.address})
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
 
               <div>

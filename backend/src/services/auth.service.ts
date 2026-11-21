@@ -15,6 +15,9 @@ export interface UserResponse {
   lastName: string;
   role: Role;
   organizationId: string;
+  businessId?: string | null;
+  phone?: string | null;
+  driverStatus?: string | null;
 }
 
 export interface OrgResponse {
@@ -36,6 +39,9 @@ function toUserResponse(row: authRepo.UserRow): UserResponse {
     lastName: row.last_name,
     role: row.role,
     organizationId: row.organization_id,
+    businessId: row.business_id ?? null,
+    phone: row.phone ?? null,
+    driverStatus: row.driver_status ?? null,
   };
 }
 
@@ -49,6 +55,7 @@ function generateTokens(user: authRepo.UserRow): AuthTokens {
     orgId: user.organization_id,
     role: user.role,
     email: user.email,
+    businessId: user.business_id ?? null,
   };
 
   const accessToken = jwt.sign(payload, config.jwtSecret, {

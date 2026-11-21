@@ -172,6 +172,19 @@ export async function findPickupsByDriverId(
   return result.rows;
 }
 
+export async function findPickupsByBusinessId(
+  businessId: string,
+  orgId: string,
+): Promise<PickupRow[]> {
+  const result = await query<PickupRow>(
+    `SELECT * FROM pickup_requests
+     WHERE business_id = $1 AND organization_id = $2
+     ORDER BY created_at DESC`,
+    [businessId, orgId],
+  );
+  return result.rows;
+}
+
 export async function lockPickupsForUpdate(
   client: PoolClient,
   ids: string[],

@@ -12,7 +12,8 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "migrate": "node migrations.js",
-    "db:reset": "node migrations.js --reset"
+    "db:reset": "node migrations.js --reset",
+    "db:seed": "node -r ts-node/register/transpile-only src/scripts/seed.ts"
   },
   "keywords": [],
   "author": "",

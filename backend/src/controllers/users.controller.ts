@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
 import {
+  createUserSchema,
+  updateUserSchema,
   updateUserRoleSchema,
   updateUserStatusSchema,
   listUsersQuerySchema,
@@ -39,6 +41,20 @@ export async function getUserById(req: Request, res: Response): Promise<void> {
   sendSuccess(res, await userService.getUserById(id, orgId));
 }
 
+export async function createUser(req: Request, res: Response): Promise<void> {
+  const orgId = req.user!.orgId;
+  const input = parseBody(createUserSchema, req.body);
+  const user = await userService.createUser(orgId, input);
+  sendSuccess(res, user, 201);
+}
+
+export async function updateUser(req: Request, res: Response): Promise<void> {
+  const orgId = req.user!.orgId;
+  const id = req.params['id'] as string;
+  const input = parseBody(updateUserSchema, req.body);
+  sendSuccess(res, await userService.updateUser(id, orgId, input));
+}
+
 export async function updateUserRole(req: Request, res: Response): Promise<void> {
   const orgId = req.user!.orgId;
   const id = req.params['id'] as string;
@@ -51,4 +67,10 @@ export async function updateUserStatus(req: Request, res: Response): Promise<voi
   const id = req.params['id'] as string;
   const input = parseBody(updateUserStatusSchema, req.body);
   sendSuccess(res, await userService.updateUserStatus(id, orgId, input));
+}
+
+export async function deleteUser(req: Request, res: Response): Promise<void> {
+  const orgId = req.user!.orgId;
+  const id = req.params['id'] as string;
+  sendSuccess(res, await userService.deleteUser(id, orgId));
 }

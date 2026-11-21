@@ -17,8 +17,8 @@ businessesRouter.use(authenticate);
 
 businessesRouter.post('/', requireRole('admin', 'dispatcher'), createBusiness);
 businessesRouter.get('/', requireRole('admin', 'dispatcher'), listBusinesses);
-businessesRouter.get('/:id', requireRole('admin', 'dispatcher'), getBusinessById);
+businessesRouter.get('/:id', requireRole('admin', 'dispatcher', 'business_user'), getBusinessById);
 
 // Nested pickup-location sub-resources
 businessesRouter.post('/:id/locations', requireRole('admin', 'dispatcher'), createPickupLocation);
-businessesRouter.get('/:id/locations', requireRole('admin', 'dispatcher'), listPickupLocations);
+businessesRouter.get('/:id/locations', requireRole('admin', 'dispatcher', 'business_user'), listPickupLocations);

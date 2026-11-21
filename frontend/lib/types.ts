@@ -2,8 +2,16 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  role: 'admin' | 'dispatcher' | 'driver';
+  firstName?: string;
+  lastName?: string;
+  role: 'admin' | 'dispatcher' | 'driver' | 'business_user';
   organizationId: string;
+  businessId?: string | null;
+  businessName?: string | null;
+  phone?: string | null;
+  driverStatus?: string | null;
+  isActive?: boolean;
+  createdAt?: string;
 }
 
 export interface Organization {

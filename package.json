@@ -20,6 +20,7 @@
     "test:backend": "npm test --prefix backend",
     "test:e2e": "cd frontend && npx playwright test",
     "test:e2e:ui": "cd frontend && npx playwright test --ui",
+    "db:seed": "npm run db:seed --prefix backend",
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev",
     "docker:up": "docker compose up --build",

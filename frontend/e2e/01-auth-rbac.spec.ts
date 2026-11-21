@@ -81,7 +81,7 @@ test.describe('1. Auth, Session & RBAC UI Guards', () => {
     await page.fill('#password', adminPassword);
     await page.click('button[type="submit"]');
 
-    await expect(page).toHaveURL(/\/dashboard/, { timeout: 15000 });
+    await expect(page).toHaveURL(/\/(routes|dashboard)/, { timeout: 15000 });
 
     // Driver attempts to visit admin-only route /audit-logs
     await page.goto('/audit-logs');

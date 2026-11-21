@@ -73,8 +73,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const url = `${BASE_URL}${path}`;
   const res = await fetch(url, { ...init, headers });
 
-  // Handle 401 — clear token (don't redirect here, caller decides)
-  if (res.status === 401) {
+  // Handle 401 — clear token only if an existing token was rejected on auth validation
+  if (res.status === 401 && token && path.startsWith('/users/me')) {
     clearStoredToken();
   }
 

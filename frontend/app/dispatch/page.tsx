@@ -257,7 +257,7 @@ export default function DispatchPage() {
                           Load: <strong data-testid={`vehicle-card-load-${v.id}`}>{v.currentLoadKg ?? 0} kg</strong>
                         </span>
                       </div>
-                      {v.status === 'dispatched' && (
+                      {v.status !== 'out_of_service' && v.status !== 'maintenance' && (
                         <div className="mt-2 pl-7">
                           <Button
                             size="sm"

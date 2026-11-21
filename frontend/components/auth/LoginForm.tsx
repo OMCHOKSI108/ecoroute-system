@@ -4,7 +4,7 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/Button';
-import { ROUTES } from '@/lib/routes';
+import { ROUTES, getRoleLandingPage } from '@/lib/routes';
 
 export function LoginForm() {
   const { login, loading, error } = useAuth();
@@ -16,7 +16,7 @@ export function LoginForm() {
     e.preventDefault();
     const user = await login(email, password);
     if (user) {
-      router.push(ROUTES.DASHBOARD);
+      router.push(getRoleLandingPage(user.role));
     }
   };
 

@@ -17,3 +17,17 @@ export const ROUTES = {
   PICKUP_LOCATIONS: '/pickup-locations',
   WASTE_CATEGORIES: '/waste-categories',
 } as const;
+
+export function getRoleLandingPage(role?: string): string {
+  switch (role) {
+    case 'dispatcher':
+      return ROUTES.DISPATCH;
+    case 'driver':
+      return ROUTES.ROUTES;
+    case 'business_user':
+      return ROUTES.PICKUPS;
+    case 'admin':
+    default:
+      return ROUTES.DASHBOARD;
+  }
+}

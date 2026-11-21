@@ -11,6 +11,11 @@ export function useVehicles() {
 
   useEffect(() => {
     let cancelled = false;
+    const token = typeof window !== 'undefined' ? localStorage.getItem('ecoroute_token') : null;
+    if (!token) {
+      setLoading(false);
+      return;
+    }
     api.get<Vehicle[]>('/vehicles')
       .then((data) => { if (!cancelled) setVehicles(data); })
       .catch((err) => {

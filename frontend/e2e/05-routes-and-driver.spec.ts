@@ -133,7 +133,7 @@ test.describe('5, 6, 7. Route Generation, Driver Workflow & Route Completion', (
     await driverPage.fill('#email', driverEmail);
     await driverPage.fill('#password', password);
     await driverPage.click('button[type="submit"]');
-    await expect(driverPage).toHaveURL(/\/dashboard/);
+    await expect(driverPage).toHaveURL(/\/(routes|dashboard)/);
 
     // Navigate to the route details page
     await driverPage.goto(`http://localhost:3001/routes/${routeId}`);

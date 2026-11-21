@@ -79,7 +79,7 @@ export function extractToken(response: unknown): string | null {
  */
 function parseUser(raw: unknown): User | null {
   if (!raw || typeof raw !== 'object') return null;
-  const obj = raw as Record<string, string>;
+  const obj = raw as Record<string, any>;
 
   const id = obj.id || obj._id;
   if (!id) return null;
@@ -88,8 +88,16 @@ function parseUser(raw: unknown): User | null {
     id,
     email: obj.email || '',
     name: obj.name || `${obj.firstName ?? ''} ${obj.lastName ?? ''}`.trim() || 'Unknown',
+    firstName: obj.firstName || obj.first_name,
+    lastName: obj.lastName || obj.last_name,
     role: (obj.role as User['role']) || 'dispatcher',
     organizationId: obj.organizationId || obj.organization_id || '',
+    businessId: obj.businessId || obj.business_id || null,
+    businessName: obj.businessName || obj.business_name || null,
+    phone: obj.phone || null,
+    driverStatus: obj.driverStatus || obj.driver_status || null,
+    isActive: obj.isActive !== undefined ? Boolean(obj.isActive) : (obj.is_active !== undefined ? Boolean(obj.is_active) : true),
+    createdAt: obj.createdAt || obj.created_at,
   };
 }
 

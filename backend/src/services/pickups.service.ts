@@ -1,6 +1,6 @@
 import * as pickupRepo from '../repositories/pickups.repository';
 import { logAudit } from './audit.service';
-import { ConflictError, NotFoundError } from '../types/errors';
+import { ConflictError, NotFoundError, ForbiddenError } from '../types/errors';
 import type {
   CreatePickupInput,
   UpdatePickupStatusInput,
@@ -51,7 +51,19 @@ export async function createPickup(
   input: CreatePickupInput,
   orgId: string,
   requestedBy: string,
+  userRole?: string,
+  userBusinessId?: string | null,
 ): Promise<PickupResponse> {
+  if (userRole === 'business_user') {
+    if (!userBusinessId) {
+      throw new ForbiddenError('Business user is not linked to any business location');
+    }
+    if (input.businessId && input.businessId !== userBusinessId) {
+      throw new ForbiddenError('Cannot create pickup for another business');
+    }
+    input.businessId = userBusinessId;
+  }
+
   const row = await pickupRepo.createPickup(
     { ...input, requestedBy },
     orgId,
@@ -63,7 +75,12 @@ export async function createPickup(
 export async function listPickups(
   orgId: string,
   queryParams: ListPickupsQuery,
+  userRole?: string,
+  userBusinessId?: string | null,
 ): Promise<{ data: PickupResponse[]; total: number; page: number; limit: number }> {
+  if (userRole === 'business_user' && userBusinessId) {
+    queryParams.businessId = userBusinessId;
+  }
   const { data, total } = await pickupRepo.findPickupsByOrg(orgId, queryParams);
   return {
     data: data.map(toPickupResponse),
@@ -73,9 +90,17 @@ export async function listPickups(
   };
 }
 
-export async function getPickupById(id: string, orgId: string): Promise<PickupResponse> {
+export async function getPickupById(
+  id: string,
+  orgId: string,
+  userRole?: string,
+  userBusinessId?: string | null,
+): Promise<PickupResponse> {
   const row = await pickupRepo.findPickupByIdAndOrg(id, orgId);
   if (!row) throw new NotFoundError('Pickup request not found');
+  if (userRole === 'business_user' && userBusinessId && row.business_id !== userBusinessId) {
+    throw new ForbiddenError('Access to this pickup is restricted to its business');
+  }
   return toPickupResponse(row);
 }
 
@@ -113,10 +138,16 @@ export async function updatePickupStatus(
 }
 
 export async function getMyPickups(
-  driverId: string,
+  callerId: string,
   orgId: string,
+  userRole?: string,
+  userBusinessId?: string | null,
 ): Promise<PickupResponse[]> {
-  const rows = await pickupRepo.findPickupsByDriverId(driverId, orgId);
+  if (userRole === 'business_user' && userBusinessId) {
+    const rows = await pickupRepo.findPickupsByBusinessId(userBusinessId, orgId);
+    return rows.map(toPickupResponse);
+  }
+  const rows = await pickupRepo.findPickupsByDriverId(callerId, orgId);
   return rows.map(toPickupResponse);
 }
 
