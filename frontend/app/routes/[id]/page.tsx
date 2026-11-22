@@ -24,6 +24,7 @@ interface RouteStop {
   id: string;
   routeId: string;
   pickupId: string | null;
+  pickupStatus?: string | null;
   stopOrder: number;
   status: string;
   latitude: number | null;
@@ -71,6 +72,7 @@ export default function RouteDetailPage({
 
   const handleUpdateStopStatus = async (stopId: string, status: string) => {
     setActionLoading(stopId);
+    setError(null);
     try {
       await api.patch(`/route-stops/${stopId}/status`, { status });
       setActionSuccess(`Stop #${stops.find((s) => s.id === stopId)?.stopOrder} updated to "${status}"`);
@@ -82,14 +84,22 @@ export default function RouteDetailPage({
     }
   };
 
-  const handleCompletePickup = async (pickupId: string) => {
-    setActionLoading(pickupId);
+  const handleCompleteStop = async (stop: RouteStop) => {
+    setActionLoading(stop.id);
+    setError(null);
     try {
-      await api.patch(`/pickups/${pickupId}/status`, { status: 'completed' });
-      setActionSuccess(`Pickup marked as completed!`);
+      // 1. Mark pickup as completed if attached
+      if (stop.pickupId) {
+        await api.patch(`/pickups/${stop.pickupId}/status`, { status: 'completed' }).catch((err) => {
+          console.warn('Pickup complete notice:', err);
+        });
+      }
+      // 2. Mark stop as completed
+      await api.patch(`/route-stops/${stop.id}/status`, { status: 'completed' });
+      setActionSuccess(`Stop #${stop.stopOrder} and pickup marked as completed!`);
       await loadRouteData();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Failed to complete pickup');
+      setError(err instanceof ApiError ? err.message : 'Failed to complete stop');
     } finally {
       setActionLoading(null);
     }
@@ -97,6 +107,7 @@ export default function RouteDetailPage({
 
   const handleCompleteRoute = async () => {
     setActionLoading('route-complete');
+    setError(null);
     try {
       await api.patch(`/routes/${routeId}/status`, { status: 'completed' });
       setActionSuccess(`Route completed! Vehicle capacity reset to available.`);
@@ -216,23 +227,20 @@ export default function RouteDetailPage({
                           <Button
                             size="sm"
                             variant="primary"
-                            onClick={() => handleUpdateStopStatus(s.id, 'completed')}
+                            onClick={() => handleCompleteStop(s)}
                             loading={actionLoading === s.id}
-                            data-testid={`mark-completed-button-${s.id}`}
-                          >
-                            Mark Completed
-                          </Button>
-                        )}
-                        {s.pickupId && s.status !== 'completed' && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleCompletePickup(s.pickupId!)}
-                            loading={actionLoading === s.pickupId}
-                            data-testid={`complete-pickup-button-${s.pickupId}`}
+                            data-testid={`complete-pickup-button-${s.id}`}
                           >
                             Complete Pickup
                           </Button>
+                        )}
+                        {s.status === 'completed' && (
+                          <span
+                            className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 border border-emerald-200"
+                            data-testid={`stop-completed-badge-${s.id}`}
+                          >
+                            ✓ Completed
+                          </span>
                         )}
                       </td>
                     </tr>

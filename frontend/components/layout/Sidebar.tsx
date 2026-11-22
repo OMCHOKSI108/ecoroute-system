@@ -24,7 +24,6 @@ const allNavItems: NavItem[] = [
   { label: 'Team / Users', href: ROUTES.USERS, roles: ['admin'] },
   { label: 'Pickup Locations', href: ROUTES.PICKUP_LOCATIONS, roles: ['admin', 'dispatcher', 'business_user'] },
   { label: 'Waste Categories', href: ROUTES.WASTE_CATEGORIES, roles: ['admin', 'dispatcher'] },
-  { label: 'Notifications', href: ROUTES.NOTIFICATIONS, roles: ['admin', 'dispatcher', 'driver', 'business_user'] },
   { label: 'Audit Logs', href: ROUTES.AUDIT_LOGS, roles: ['admin'] },
   { label: 'Organizations', href: ROUTES.ORGANIZATIONS, roles: ['admin'] },
   { label: 'Settings', href: ROUTES.SETTINGS, roles: ['admin'] },

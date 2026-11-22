@@ -1,4 +1,5 @@
 import * as routeStopRepo from '../repositories/route-stops.repository';
+import * as pickupRepo from '../repositories/pickups.repository';
 import { NotFoundError } from '../types/errors';
 import type { ListRouteStopsQuery, UpdateRouteStopStatusInput } from '../schemas/route-stops.schemas';
 import type { RouteStopRow } from '../repositories/route-stops.repository';
@@ -7,6 +8,7 @@ export interface RouteStopResponse {
   id: string;
   routeId: string;
   pickupId: string | null;
+  pickupStatus?: string | null;
   stopOrder: number;
   status: string;
   latitude: number | null;
@@ -23,6 +25,7 @@ function toResponse(row: RouteStopRow): RouteStopResponse {
     id: row.id,
     routeId: row.route_id,
     pickupId: row.pickup_id,
+    pickupStatus: (row as any).pickup_status ?? null,
     stopOrder: row.stop_order,
     status: row.status,
     latitude: row.latitude,
@@ -66,6 +69,21 @@ export async function updateRouteStopStatus(
 ): Promise<RouteStopResponse> {
   const row = await routeStopRepo.updateRouteStopStatus(id, orgId, input.status);
   if (!row) throw new NotFoundError('Route stop not found');
+
+  // When a stop is marked completed, automatically complete the attached pickup
+  if (input.status === 'completed' && row.pickup_id) {
+    if (typeof pickupRepo.updatePickupStatus === 'function') {
+      await Promise.resolve(pickupRepo.updatePickupStatus(row.pickup_id, orgId, 'completed')).catch(() => {});
+    }
+  } else if (input.status === 'arrived' && row.pickup_id) {
+    if (typeof pickupRepo.findPickupByIdAndOrg === 'function' && typeof pickupRepo.updatePickupStatus === 'function') {
+      const pickup = await Promise.resolve(pickupRepo.findPickupByIdAndOrg(row.pickup_id, orgId)).catch(() => null);
+      if (pickup && pickup.status === 'assigned') {
+        await Promise.resolve(pickupRepo.updatePickupStatus(row.pickup_id, orgId, 'in_progress')).catch(() => {});
+      }
+    }
+  }
+
   return toResponse(row);
 }
 

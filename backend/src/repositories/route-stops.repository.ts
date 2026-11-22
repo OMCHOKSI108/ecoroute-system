@@ -4,6 +4,7 @@ export interface RouteStopRow {
   id: string;
   route_id: string;
   pickup_id: string | null;
+  pickup_status?: string | null;
   stop_order: number;
   status: 'pending' | 'arrived' | 'completed' | 'skipped' | 'failed';
   latitude: number | null;
@@ -49,7 +50,13 @@ export async function findRouteStopsByOrg(
   const total = parseInt(countResult.rows[0]?.count ?? '0', 10);
 
   const dataResult = await query<RouteStopRow>(
-    `SELECT rs.* FROM route_stops rs JOIN routes r ON r.id = rs.route_id WHERE ${where} ORDER BY rs.stop_order ASC LIMIT $${idx} OFFSET $${idx + 1}`,
+    `SELECT rs.*, pr.status AS pickup_status
+     FROM route_stops rs
+     JOIN routes r ON r.id = rs.route_id
+     LEFT JOIN pickup_requests pr ON pr.id = rs.pickup_id
+     WHERE ${where}
+     ORDER BY rs.stop_order ASC
+     LIMIT $${idx} OFFSET $${idx + 1}`,
     [...params, opts.limit, offset],
   );
 
@@ -58,8 +65,10 @@ export async function findRouteStopsByOrg(
 
 export async function findRouteStopById(id: string, orgId: string): Promise<RouteStopRow | null> {
   const result = await query<RouteStopRow>(
-    `SELECT rs.* FROM route_stops rs
+    `SELECT rs.*, pr.status AS pickup_status
+     FROM route_stops rs
      JOIN routes r ON r.id = rs.route_id
+     LEFT JOIN pickup_requests pr ON pr.id = rs.pickup_id
      WHERE rs.id = $1 AND r.organization_id = $2`,
     [id, orgId],
   );
@@ -87,8 +96,10 @@ export async function findRouteStopsByRouteId(
   orgId: string,
 ): Promise<RouteStopRow[]> {
   const result = await query<RouteStopRow>(
-    `SELECT rs.* FROM route_stops rs
+    `SELECT rs.*, pr.status AS pickup_status
+     FROM route_stops rs
      JOIN routes r ON r.id = rs.route_id
+     LEFT JOIN pickup_requests pr ON pr.id = rs.pickup_id
      WHERE rs.route_id = $1 AND r.organization_id = $2
      ORDER BY rs.stop_order ASC`,
     [routeId, orgId],

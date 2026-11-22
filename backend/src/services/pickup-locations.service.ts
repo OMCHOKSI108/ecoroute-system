@@ -54,6 +54,13 @@ export async function listPickupLocations(
   return rows.map(toResponse);
 }
 
+export async function listAllPickupLocations(
+  orgId: string,
+): Promise<PickupLocationResponse[]> {
+  const rows = await plRepo.findPickupLocationsByOrg(orgId);
+  return rows.map(toResponse);
+}
+
 export async function getPickupLocationById(
   id: string,
   orgId: string,

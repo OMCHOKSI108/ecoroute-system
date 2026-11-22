@@ -44,6 +44,18 @@ export async function findPickupLocationsByBusiness(
   return result.rows;
 }
 
+export async function findPickupLocationsByOrg(
+  orgId: string,
+): Promise<PickupLocationRow[]> {
+  const result = await query<PickupLocationRow>(
+    `SELECT * FROM pickup_locations
+     WHERE organization_id = $1
+     ORDER BY created_at DESC`,
+    [orgId],
+  );
+  return result.rows;
+}
+
 export async function findPickupLocationById(
   id: string,
   orgId: string,

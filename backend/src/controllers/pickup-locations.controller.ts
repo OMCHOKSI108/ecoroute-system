@@ -27,6 +27,11 @@ export async function listPickupLocations(req: Request, res: Response): Promise<
   sendSuccess(res, await plService.listPickupLocations(businessId, orgId));
 }
 
+export async function listAllPickupLocations(req: Request, res: Response): Promise<void> {
+  const orgId = req.user!.orgId;
+  sendSuccess(res, await plService.listAllPickupLocations(orgId));
+}
+
 export async function getPickupLocationById(req: Request, res: Response): Promise<void> {
   const orgId = req.user!.orgId;
   const id = req.params['id'] as string;

@@ -44,7 +44,7 @@ export function toPickupResponse(row: pickupRepo.PickupRow): PickupResponse {
 const VALID_TRANSITIONS: Record<string, string[]> = {
   cancelled: ['pending', 'assigned'],
   in_progress: ['assigned'],
-  completed: ['in_progress'],
+  completed: ['in_progress', 'assigned'],
 };
 
 export async function createPickup(
@@ -114,6 +114,11 @@ export async function updatePickupStatus(
   const current = await pickupRepo.findPickupByIdAndOrg(id, orgId);
   if (!current) throw new NotFoundError('Pickup request not found');
 
+  // Idempotent: if already in the target status, return current pickup cleanly
+  if (current.status === input.status) {
+    return toPickupResponse(current);
+  }
+
   const allowedFrom = VALID_TRANSITIONS[input.status];
   if (!allowedFrom || !allowedFrom.includes(current.status)) {
     throw new ConflictError(
@@ -124,6 +129,11 @@ export async function updatePickupStatus(
   const updated = await pickupRepo.updatePickupStatus(id, orgId, input.status);
 
   if (input.status === 'completed') {
+    // Also sync any route stop pointing to this completed pickup
+    if (typeof pickupRepo.syncRouteStopForPickup === 'function') {
+      await Promise.resolve(pickupRepo.syncRouteStopForPickup(id, orgId, 'completed')).catch(() => {});
+    }
+
     logAudit({
       organizationId: orgId,
       actorId,

@@ -51,10 +51,14 @@ export interface Vehicle {
 
 export interface PickupLocation {
   id: string;
+  name?: string;
   address: string;
   latitude: number;
   longitude: number;
   businessId: string;
+  businessName?: string;
+  isActive?: boolean;
+  createdAt?: string;
 }
 
 export interface Pickup {
@@ -73,9 +77,11 @@ export interface Route {
   id: string;
   status: 'planned' | 'active' | 'completed' | 'cancelled';
   vehicleId: string;
-  driverId: string;
-  distance: number;
-  estimatedDuration: number;
+  driverId?: string;
+  distance?: number;
+  totalDistanceM?: number;
+  estimatedDuration?: number;
+  totalDurationS?: number;
   organizationId: string;
   createdAt: string;
 }
@@ -108,4 +114,7 @@ export interface WasteCategory {
   id: string;
   name: string;
   description?: string;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }

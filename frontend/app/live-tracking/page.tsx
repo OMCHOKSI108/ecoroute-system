@@ -37,7 +37,9 @@ export default function LiveTrackingPage() {
                   >
                     <span className="font-mono text-xs text-gray-500">{r.id.slice(0, 8)}</span>
                     <StatusBadge status={r.status} />
-                    <span className="text-gray-500">{r.distance.toFixed(1)} km</span>
+                    <span className="text-gray-500">
+                      {((r.totalDistanceM ? r.totalDistanceM / 1000 : r.distance) ?? 0).toFixed(1)} km
+                    </span>
                   </li>
                 ))}
               </ul>

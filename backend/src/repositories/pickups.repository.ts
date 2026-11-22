@@ -196,3 +196,17 @@ export async function lockPickupsForUpdate(
   );
   return result.rows;
 }
+
+export async function syncRouteStopForPickup(
+  pickupId: string,
+  orgId: string,
+  stopStatus: string,
+): Promise<void> {
+  await query(
+    `UPDATE route_stops rs
+     SET status = $1, updated_at = NOW()
+     FROM routes r
+     WHERE rs.pickup_id = $2 AND r.id = rs.route_id AND r.organization_id = $3 AND rs.status != $1`,
+    [stopStatus, pickupId, orgId],
+  );
+}

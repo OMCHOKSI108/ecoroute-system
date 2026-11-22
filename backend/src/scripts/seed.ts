@@ -46,11 +46,35 @@ async function seed() {
     const org2Id = org2Res.rows[0].id;
 
     // ==========================================
-    // 2. ORG 1 BUSINESSES
+    // 2. WASTE CATEGORIES
+    // ==========================================
+    console.log('♻️ Seeding Waste Categories...');
+    const wasteCategoriesData = [
+      { name: 'Plastic Recyclables', desc: 'High-density polyethylene (HDPE), PET bottles, and rigid thermoplastics.' },
+      { name: 'Corrugated Cardboard & Paper', desc: 'Baled corrugated packaging boxes, mixed office paper, and newsprint.' },
+      { name: 'Glass & Bottled Containers', desc: 'Sorted clear, amber, and green beverage containers and culinary glass.' },
+      { name: 'Organic & Food Scraps', desc: 'Compostable produce, commercial food preparation scraps, and organic matter.' },
+      { name: 'Scrap Metal & Aluminum', desc: 'Ferrous and non-ferrous manufacturing shavings, aluminum beverage cans.' },
+      { name: 'Electronic & IT Waste', desc: 'Decommissioned server chassis, circuit boards, batteries, and peripherals.' },
+    ];
+
+    for (const wc of wasteCategoriesData) {
+      await client.query(
+        `INSERT INTO waste_categories (organization_id, name, description, is_active)
+         VALUES ($1, $2, $3, true)
+         ON CONFLICT (organization_id, name) DO UPDATE SET
+           description = EXCLUDED.description,
+           is_active = true,
+           updated_at = NOW()`,
+        [org1Id, wc.name, wc.desc],
+      );
+    }
+
+    // ==========================================
+    // 3. COMMERCIAL BUSINESSES
     // ==========================================
     console.log('🏬 Seeding Commercial Businesses...');
     
-    // Clean up existing demo businesses to ensure fresh state if needed
     const businessesData = [
       {
         name: 'Metro Supermarket Central',
@@ -78,6 +102,33 @@ async function seed() {
         lat: 40.7589,
         lng: -73.9882,
         categories: ['Metal', 'Plastic', 'Electronic'],
+      },
+      {
+        name: 'Hudson Bio-Chemicals Hub',
+        email: 'facilities@hudsonbio.demo',
+        phone: '+1-555-4444',
+        address: '500 W 33rd St, New York, NY 10001',
+        lat: 40.7538,
+        lng: -74.0022,
+        categories: ['Organic', 'Plastic', 'Glass'],
+      },
+      {
+        name: 'Empire Logistics Center',
+        email: 'depot@empirelogistics.demo',
+        phone: '+1-555-5555',
+        address: '31-10 47th Ave, Long Island City, NY 11101',
+        lat: 40.7441,
+        lng: -73.9352,
+        categories: ['Paper', 'Plastic', 'Metal'],
+      },
+      {
+        name: 'GreenPoint Materials Terminal',
+        email: 'terminal@greenpoint.demo',
+        phone: '+1-555-6666',
+        address: '25 Kent Ave, Brooklyn, NY 11249',
+        lat: 40.7225,
+        lng: -73.9578,
+        categories: ['Metal', 'Glass', 'Plastic'],
       },
     ];
 
@@ -127,11 +178,86 @@ async function seed() {
     const org2BusinessId = bOrg2Res.rows[0].id;
 
     // ==========================================
-    // 3. USERS (Admin, Dispatcher, Drivers, Business Users)
+    // 4. PICKUP LOCATIONS (Physical Loading Docks)
+    // ==========================================
+    console.log('📍 Seeding Physical Pickup Locations...');
+    await client.query(`DELETE FROM pickup_locations WHERE organization_id = $1`, [org1Id]);
+
+    const locationsData = [
+      {
+        biz: 'Metro Supermarket Central',
+        name: 'Dock A - Grocery Receiving Bay',
+        address: '100 Broadway Rear Dock, New York, NY 10006',
+        lat: 40.7077,
+        lng: -74.0119,
+      },
+      {
+        biz: 'Metro Supermarket Central',
+        name: 'Compactor Terminal 2',
+        address: '100 Broadway Sub-Basement, New York, NY 10006',
+        lat: 40.7079,
+        lng: -74.0121,
+      },
+      {
+        biz: 'TechLogix Industrial Park',
+        name: 'Warehouse Loading Ramp 3',
+        address: '450 5th Ave Loading Gate, New York, NY 10018',
+        lat: 40.7516,
+        lng: -73.9832,
+      },
+      {
+        biz: 'TechLogix Industrial Park',
+        name: 'Server Room E-Waste Depot',
+        address: '450 5th Ave Tower B, Floor 4, New York, NY 10018',
+        lat: 40.7518,
+        lng: -73.9830,
+      },
+      {
+        biz: 'Harbor Manufacturing Co',
+        name: 'Heavy Metal Scrap Yard',
+        address: '730 8th Ave West Wing, New York, NY 10036',
+        lat: 40.7589,
+        lng: -73.9882,
+      },
+      {
+        biz: 'Hudson Bio-Chemicals Hub',
+        name: 'Main Biological Waste Port',
+        address: '500 W 33rd St Bay 1, New York, NY 10001',
+        lat: 40.7538,
+        lng: -74.0022,
+      },
+      {
+        biz: 'Empire Logistics Center',
+        name: 'Crossdock Loading Station 12',
+        address: '31-10 47th Ave Dock 12, Long Island City, NY 11101',
+        lat: 40.7441,
+        lng: -73.9352,
+      },
+      {
+        biz: 'GreenPoint Materials Terminal',
+        name: 'Materials Processing Line 1',
+        address: '25 Kent Ave Gate A, Brooklyn, NY 11249',
+        lat: 40.7225,
+        lng: -73.9578,
+      },
+    ];
+
+    for (const loc of locationsData) {
+      const bId = businessIds[loc.biz];
+      if (bId) {
+        await client.query(
+          `INSERT INTO pickup_locations (organization_id, business_id, name, address, latitude, longitude, location, is_active)
+           VALUES ($1, $2, $3, $4, $5, $6, ST_SetSRID(ST_MakePoint($6, $5), 4326), true)`,
+          [org1Id, bId, loc.name, loc.address, loc.lat, loc.lng],
+        );
+      }
+    }
+
+    // ==========================================
+    // 5. USERS (Admin, Dispatcher, Drivers, Business Users)
     // ==========================================
     console.log('👥 Seeding Users across all Roles...');
 
-    // Function to upsert user
     async function upsertUser(
       orgId: string,
       email: string,
@@ -201,6 +327,28 @@ async function seed() {
       'available',
     );
 
+    const driver3Id = await upsertUser(
+      org1Id,
+      'driver.diana@ecoroute.demo',
+      'Diana',
+      'Driver',
+      'driver',
+      '+1-555-0107',
+      null,
+      'available',
+    );
+
+    const driver4Id = await upsertUser(
+      org1Id,
+      'driver.derek@ecoroute.demo',
+      'Derek',
+      'Driver',
+      'driver',
+      '+1-555-0108',
+      null,
+      'available',
+    );
+
     const businessUser1Id = await upsertUser(
       org1Id,
       'business.metro@ecoroute.demo',
@@ -232,7 +380,7 @@ async function seed() {
     );
 
     // ==========================================
-    // 4. VEHICLES
+    // 6. FLEET VEHICLES
     // ==========================================
     console.log('🚛 Seeding Fleet Vehicles...');
 
@@ -240,21 +388,35 @@ async function seed() {
       {
         plate: 'ECO-VAN-01',
         model: 'Electric Van',
-        capacityKg: 500,
+        capacityKg: 600,
         driverId: driver1Id,
         status: 'available',
       },
       {
         plate: 'ECO-TRK-02',
-        model: 'Medium Truck',
+        model: 'Medium Logistics Truck',
         capacityKg: 1500,
         driverId: driver2Id,
         status: 'available',
       },
       {
         plate: 'ECO-HVY-03',
-        model: 'Heavy Hauler',
-        capacityKg: 2500,
+        model: 'Heavy Hauler 24T',
+        capacityKg: 2800,
+        driverId: driver3Id,
+        status: 'available',
+      },
+      {
+        plate: 'ECO-EV-04',
+        model: 'Zero-Emission Flatbed',
+        capacityKg: 1200,
+        driverId: driver4Id,
+        status: 'available',
+      },
+      {
+        plate: 'ECO-CMP-05',
+        model: 'High-Capacity Compactor',
+        capacityKg: 4000,
         driverId: null,
         status: 'available',
       },
@@ -279,81 +441,173 @@ async function seed() {
     }
 
     // ==========================================
-    // 5. PICKUP REQUESTS
+    // 7. PICKUP REQUESTS ACROSS LIFECYCLES
     // ==========================================
-    console.log('📦 Seeding Pickups across Lifecycles...');
+    console.log('📦 Seeding Rich Pickups across Lifecycles...');
 
-    // Clear old demo pickups for a fresh, clean demo board
+    // Clean up existing stops, pickups, routes for org1 to ensure clean consistency
     await client.query(`DELETE FROM route_stops WHERE route_id IN (SELECT id FROM routes WHERE organization_id = $1)`, [org1Id]);
     await client.query(`DELETE FROM pickup_requests WHERE organization_id = $1`, [org1Id]);
     await client.query(`DELETE FROM routes WHERE organization_id = $1`, [org1Id]);
 
-    // Pending Pickups
-    const p1Res = await client.query(
-      `INSERT INTO pickup_requests (organization_id, business_id, requested_by, status, waste_category, estimated_weight_kg, notes)
-       VALUES ($1, $2, $3, 'pending', 'Plastic', 150.00, 'Pallet of crushed beverage containers at bay 2')
-       RETURNING id`,
-      [org1Id, businessIds['Metro Supermarket Central'], businessUser1Id],
-    );
-    const pickup1Id = p1Res.rows[0].id;
+    // Helper to insert pickup
+    async function insertPickup(
+      bizName: string,
+      requestedBy: string,
+      status: 'pending' | 'assigned' | 'in_progress' | 'completed' | 'cancelled',
+      category: string,
+      weight: number,
+      notes: string,
+      vehicleId: string | null = null,
+    ): Promise<string> {
+      const res = await client.query(
+        `INSERT INTO pickup_requests (organization_id, business_id, requested_by, status, waste_category, estimated_weight_kg, assigned_vehicle_id, notes)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         RETURNING id`,
+        [org1Id, businessIds[bizName], requestedBy, status, category, weight, vehicleId, notes],
+      );
+      return res.rows[0].id;
+    }
 
-    const p2Res = await client.query(
-      `INSERT INTO pickup_requests (organization_id, business_id, requested_by, status, waste_category, estimated_weight_kg, notes)
-       VALUES ($1, $2, $3, 'pending', 'Metal', 320.00, 'Sorted aluminum scrap bins in loading zone')
-       RETURNING id`,
-      [org1Id, businessIds['Harbor Manufacturing Co'], adminId],
+    // Pending Pickups (Waiting for Dispatcher to batch/assign)
+    const pendingP1 = await insertPickup(
+      'Metro Supermarket Central',
+      businessUser1Id,
+      'pending',
+      'Plastic Recyclables',
+      160.00,
+      'Pallet of crushed beverage containers at Bay 2',
     );
-    const pickup2Id = p2Res.rows[0].id;
-
-    // Assigned / In-Progress Pickups (to be bound to Route)
-    const p3Res = await client.query(
-      `INSERT INTO pickup_requests (organization_id, business_id, requested_by, status, waste_category, estimated_weight_kg, assigned_vehicle_id, notes)
-       VALUES ($1, $2, $3, 'assigned', 'Paper', 120.00, $4, 'Baled corrugated cardboard')
-       RETURNING id`,
-      [org1Id, businessIds['TechLogix Industrial Park'], businessUser2Id, vehicleIds['ECO-VAN-01']],
+    const pendingP2 = await insertPickup(
+      'Harbor Manufacturing Co',
+      adminId,
+      'pending',
+      'Scrap Metal & Aluminum',
+      340.00,
+      'Sorted aluminum turnings in steel tote bins',
     );
-    const pickup3Id = p3Res.rows[0].id;
-
-    const p4Res = await client.query(
-      `INSERT INTO pickup_requests (organization_id, business_id, requested_by, status, waste_category, estimated_weight_kg, assigned_vehicle_id, notes)
-       VALUES ($1, $2, $3, 'in_progress', 'Glass', 90.00, $4, 'Crates of sorted clear glass bottles')
-       RETURNING id`,
-      [org1Id, businessIds['Metro Supermarket Central'], businessUser1Id, vehicleIds['ECO-VAN-01']],
+    const pendingP3 = await insertPickup(
+      'Hudson Bio-Chemicals Hub',
+      adminId,
+      'pending',
+      'Organic & Food Scraps',
+      190.00,
+      'Biodegradable organic pulp from pilot fermentation',
     );
-    const pickup4Id = p4Res.rows[0].id;
-
-    // Completed Pickups
-    await client.query(
-      `INSERT INTO pickup_requests (organization_id, business_id, requested_by, status, waste_category, estimated_weight_kg, assigned_vehicle_id, notes)
-       VALUES ($1, $2, $3, 'completed', 'Organic', 210.00, $4, 'Compost bins collected and weighed')`,
-      [org1Id, businessIds['Metro Supermarket Central'], businessUser1Id, vehicleIds['ECO-TRK-02']],
+    const pendingP4 = await insertPickup(
+      'GreenPoint Materials Terminal',
+      dispatcherId,
+      'pending',
+      'Glass & Bottled Containers',
+      220.00,
+      'Mixed cullet crates ready for processing line',
     );
 
-    await client.query(
-      `INSERT INTO pickup_requests (organization_id, business_id, requested_by, status, waste_category, estimated_weight_kg, assigned_vehicle_id, notes)
-       VALUES ($1, $2, $3, 'completed', 'Electronic', 450.00, $4, 'Decommissioned server chassis and e-waste')`,
-      [org1Id, businessIds['Harbor Manufacturing Co'], adminId, vehicleIds['ECO-TRK-02']],
+    // Assigned Pickups (Allocated to vehicles, awaiting route dispatch)
+    const assignedP1 = await insertPickup(
+      'Empire Logistics Center',
+      dispatcherId,
+      'assigned',
+      'Corrugated Cardboard & Paper',
+      280.00,
+      'Baled double-wall corrugated cardboard from crossdock',
+      vehicleIds['ECO-TRK-02'],
+    );
+    const assignedP2 = await insertPickup(
+      'TechLogix Industrial Park',
+      businessUser2Id,
+      'assigned',
+      'Electronic & IT Waste',
+      175.00,
+      'Decommissioned rack servers and battery backups',
+      vehicleIds['ECO-TRK-02'],
+    );
+
+    // Pickups for Active Route (ECO-VAN-01)
+    const activeP1 = await insertPickup(
+      'Metro Supermarket Central',
+      businessUser1Id,
+      'in_progress',
+      'Plastic Recyclables',
+      120.00,
+      'Clean shrink wrap and baled LDPE plastics',
+      vehicleIds['ECO-VAN-01'],
+    );
+    const activeP2 = await insertPickup(
+      'TechLogix Industrial Park',
+      businessUser2Id,
+      'in_progress',
+      'Corrugated Cardboard & Paper',
+      95.00,
+      'Office paper bales and flat-pack shipping boxes',
+      vehicleIds['ECO-VAN-01'],
+    );
+    const activeP3 = await insertPickup(
+      'Harbor Manufacturing Co',
+      adminId,
+      'in_progress',
+      'Scrap Metal & Aluminum',
+      130.00,
+      'Lightweight aluminum extrusions at Gate 4',
+      vehicleIds['ECO-VAN-01'],
+    );
+
+    // Historical Completed Pickups
+    await insertPickup(
+      'Metro Supermarket Central',
+      businessUser1Id,
+      'completed',
+      'Organic & Food Scraps',
+      240.00,
+      'Compost bins successfully collected and weighed',
+      vehicleIds['ECO-CMP-05'],
+    );
+    await insertPickup(
+      'Hudson Bio-Chemicals Hub',
+      adminId,
+      'completed',
+      'Glass & Bottled Containers',
+      310.00,
+      'Chemical glassware safely collected with manifest',
+      vehicleIds['ECO-TRK-02'],
+    );
+    await insertPickup(
+      'Empire Logistics Center',
+      dispatcherId,
+      'completed',
+      'Corrugated Cardboard & Paper',
+      420.00,
+      'High-volume cardboard collection completed on schedule',
+      vehicleIds['ECO-HVY-03'],
+    );
+
+    // Cancelled Pickup
+    await insertPickup(
+      'TechLogix Industrial Park',
+      businessUser2Id,
+      'cancelled',
+      'Electronic & IT Waste',
+      50.00,
+      'Pickup request cancelled by customer — rescheduled for next quarter',
     );
 
     // Org 2 Pickup (to verify isolation)
-    await client.query(
-      `DELETE FROM pickup_requests WHERE organization_id = $1`,
-      [org2Id],
-    );
+    await client.query(`DELETE FROM pickup_requests WHERE organization_id = $1`, [org2Id]);
     await client.query(
       `INSERT INTO pickup_requests (organization_id, business_id, requested_by, status, waste_category, estimated_weight_kg, notes)
-       VALUES ($1, $2, $3, 'pending', 'Paper', 80.00, 'Confidential shredding bin')`,
+       VALUES ($1, $2, $3, 'pending', 'Corrugated Cardboard & Paper', 80.00, 'Confidential document shredding bin')`,
       [org2Id, org2BusinessId, org2AdminId],
     );
 
     // ==========================================
-    // 6. ACTIVE ROUTE & ROUTE STOPS (for Driver & Dispatcher views)
+    // 8. ACTIVE & HISTORICAL ROUTES
     // ==========================================
-    console.log('🗺️  Seeding Active Route and Stops for ECO-VAN-01...');
+    console.log('🗺️  Seeding Active & Historical Routes and Stops...');
 
-    const routeRes = await client.query(
+    // 1. ACTIVE ROUTE for ECO-VAN-01
+    const activeRouteRes = await client.query(
       `INSERT INTO routes (organization_id, vehicle_id, status, total_distance_m, total_duration_s, pickup_count, waypoints)
-       VALUES ($1, $2, 'active', 8400.00, 1560.00, 2, $3)
+       VALUES ($1, $2, 'active', 12600.00, 2100.00, 3, $3)
        RETURNING id`,
       [
         org1Id,
@@ -361,34 +615,59 @@ async function seed() {
         JSON.stringify([
           { lat: 40.7077, lng: -74.0119, name: 'Metro Supermarket Central' },
           { lat: 40.7516, lng: -73.9832, name: 'TechLogix Industrial Park' },
+          { lat: 40.7589, lng: -73.9882, name: 'Harbor Manufacturing Co' },
         ]),
       ],
     );
-    const routeId = routeRes.rows[0].id;
+    const activeRouteId = activeRouteRes.rows[0].id;
 
-    // Link pickups to route
+    // Link active pickups to route
     await client.query(
-      `UPDATE pickup_requests SET route_id = $1 WHERE id IN ($2, $3)`,
-      [routeId, pickup3Id, pickup4Id],
+      `UPDATE pickup_requests SET route_id = $1 WHERE id IN ($2, $3, $4)`,
+      [activeRouteId, activeP1, activeP2, activeP3],
     );
 
-    // Create ordered route stops
+    // Ordered route stops: Stop 1 is arrived, Stop 2 is pending, Stop 3 is pending
     await client.query(
       `INSERT INTO route_stops (route_id, pickup_id, stop_order, status, latitude, longitude, address, planned_distance_m, planned_duration_s)
        VALUES 
        ($1, $2, 1, 'arrived', 40.7077, -74.0119, '100 Broadway, New York, NY 10006', 0, 0),
-       ($1, $3, 2, 'pending', 40.7516, -73.9832, '450 5th Ave, New York, NY 10018', 8400.00, 1560.00)`,
-      [routeId, pickup4Id, pickup3Id],
+       ($1, $3, 2, 'pending', 40.7516, -73.9832, '450 5th Ave, New York, NY 10018', 6800.00, 1150.00),
+       ($1, $4, 3, 'pending', 40.7589, -73.9882, '730 8th Ave, New York, NY 10036', 5800.00, 950.00)`,
+      [activeRouteId, activeP1, activeP2, activeP3],
     );
 
-    // Update vehicle current load
     await client.query(
-      `UPDATE vehicles SET current_load_kg = 210.00, status = 'dispatched' WHERE id = $1`,
+      `UPDATE vehicles SET current_load_kg = 345.00, status = 'dispatched' WHERE id = $1`,
       [vehicleIds['ECO-VAN-01']],
     );
 
+    // 2. COMPLETED HISTORICAL ROUTE for ECO-CMP-05
+    const compRouteRes = await client.query(
+      `INSERT INTO routes (organization_id, vehicle_id, status, total_distance_m, total_duration_s, pickup_count, waypoints)
+       VALUES ($1, $2, 'completed', 15200.00, 2400.00, 2, $3)
+       RETURNING id`,
+      [
+        org1Id,
+        vehicleIds['ECO-CMP-05'],
+        JSON.stringify([
+          { lat: 40.7077, lng: -74.0119, name: 'Metro Supermarket Central' },
+          { lat: 40.7441, lng: -73.9352, name: 'Empire Logistics Center' },
+        ]),
+      ],
+    );
+    const compRouteId = compRouteRes.rows[0].id;
+
+    await client.query(
+      `INSERT INTO route_stops (route_id, pickup_id, stop_order, status, latitude, longitude, address, planned_distance_m, planned_duration_s)
+       VALUES 
+       ($1, NULL, 1, 'completed', 40.7077, -74.0119, '100 Broadway, New York, NY 10006', 0, 0),
+       ($1, NULL, 2, 'completed', 40.7441, -73.9352, '31-10 47th Ave, Long Island City, NY 11101', 15200.00, 2400.00)`,
+      [compRouteId],
+    );
+
     await client.query('COMMIT');
-    console.log('✅ Seed completed successfully with realistic multi-tenant data!');
+    console.log('✅ EcoRoute Database successfully reseeded with rich, production-grade data!');
   } catch (err) {
     await client.query('ROLLBACK');
     console.error('❌ Seed failed:', err);
